@@ -1,6 +1,6 @@
 from fastapi import File, UploadFile, APIRouter
 import os
-
+from utils import extract_text
 
 file_router = APIRouter()
 
@@ -16,4 +16,4 @@ def add_file(file: UploadFile = File(...)):
     with open(file_path, 'wb') as f:
         f.write(file.file.read())
 
-    
+    extracted = extract_text(file_path)
