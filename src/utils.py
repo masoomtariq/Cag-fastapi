@@ -1,9 +1,12 @@
 import os
 from pypdf import PdfReader
 
+def extract_text(file_path):
+    text = ''
 
-reader = PdfReader('/workspaces/Cag/temp/uploads/ASSIST Manual.pdf')
+    reader = PdfReader(file_path)
 
-print(reader.pages)
+    for i in reader.pages:
+        text += i.extract_text()
 
-    
+    return text
