@@ -17,3 +17,5 @@ def add_file(file: UploadFile = File(...)):
         f.write(file.file.read())
 
     extracted = extract_text(file_path)
+
+    return {'extracted_text': extract_text}
