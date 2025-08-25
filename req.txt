@@ -1,4 +1,4 @@
 fastapi
 uvicorn
 python-multipart  #for adding the routers
-pdfreader
+pypdf
