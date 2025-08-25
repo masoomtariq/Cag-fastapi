@@ -8,7 +8,7 @@ app = FastAPI(title="THis is the cag project")
 def home():
     return "Hellow"
 
-app.include_router(file_router)
+app.include_router(router= file_router, prefix='/api/v1')
 
 # Run the app using Uvicorn (used for local development)
 if __name__ == "__main__":

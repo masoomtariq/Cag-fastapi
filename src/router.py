@@ -18,4 +18,4 @@ def add_file(file: UploadFile = File(...)):
 
     extracted = extract_text(file_path)
 
-    return {'extracted_text': extract_text}
+    return {'extracted_text': "some"}
