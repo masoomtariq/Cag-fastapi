@@ -1,6 +1,9 @@
 import os
 from pypdf import PdfReader
 
+def initialize_counter():
+    with open("")
+
 def extract_text(file_path):
     text = ''
 
