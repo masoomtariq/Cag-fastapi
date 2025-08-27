@@ -1,22 +1,6 @@
 import os
 from pypdf import PdfReader
 
-def initialize_counter():
-    with open("counter.txt", 'w') as counter:
-        counter.write('0')
-
-with open("counter.txt", 'r') as file:
-    counter = file.read()
-counter = int(counter)
-def save_counter(updated_counter):
-    with open("counter.txt", 'w') as file:
-        file.write(str(updated_counter))
-
-def load_counter():
-    with open('counter.txt', 'r') as file:
-        content = file.read()
-    return content
-
 def extract_text(file_path):
     text = ''
 
