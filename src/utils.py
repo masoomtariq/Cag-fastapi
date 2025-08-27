@@ -21,3 +21,5 @@ def extract_text(file_path):
         text += i.extract_text()
 
     return text
+
+initialize_counter()
