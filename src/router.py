@@ -6,7 +6,7 @@ data_store = {}
 
 file_router = APIRouter()
 
-data_path = 'temp/uploads'
+data_path = 'tmp/uploads'
 
 os.makedirs(data_path, exist_ok=True)
 
