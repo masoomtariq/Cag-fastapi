@@ -15,9 +15,6 @@ async def add_file(file: UploadFile = File(...)):
 
     file_path = os.path.join(data_path, file.filename)
     content = await file.read()
-    with open(file_path, 'wb') as f:
-        f.write(content)
+    
 
-    extracted = extract_text(file_path)
-
-    return {'file_name': file.filename, 'file_path': file_path, "extracted_text": extracted}
+    return {'file_name': file.filename, 'file_path': file_path, "extracted_text": content}
