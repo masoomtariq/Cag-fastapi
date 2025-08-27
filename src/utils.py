@@ -22,4 +22,6 @@ def extract_text(file_path):
 
     return text
 
-print(counter)
+counter = int(counter)
+
+print(type(counter))
