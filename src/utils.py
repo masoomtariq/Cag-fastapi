@@ -7,7 +7,7 @@ def initialize_counter():
 
 with open("counter.txt", 'r') as file:
     counter = file.read()
-
+counter = int(counter)
 def save_counter(updated_counter):
     with open("counter.txt", 'w') as file:
         file.write(str(updated_counter))
@@ -21,7 +21,3 @@ def extract_text(file_path):
         text += i.extract_text()
 
     return text
-
-counter = int(counter)
-
-print(type(counter))
