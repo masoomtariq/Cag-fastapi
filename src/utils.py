@@ -22,4 +22,4 @@ def extract_text(file_path):
 
     return text
 
-initialize_counter()
+print(counter)
