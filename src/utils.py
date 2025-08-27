@@ -11,3 +11,8 @@ def extract_text(file_path):
         text += i.extract_text()
 
     return text
+
+with open("counter.txt", 'r') as counter:
+    c = counter.read()
+
+print(c)
