@@ -14,4 +14,3 @@ def extract_text(file_path):
     except FileNotFoundError:
         print(f"The file is not found at the path '{file_path}'")
         return ''
-

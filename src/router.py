@@ -1,5 +1,5 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException
-from utils import extract_text
+from utils.file_processing import extract_text
 import os
 
 counter = 0

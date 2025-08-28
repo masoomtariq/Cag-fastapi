@@ -2,3 +2,5 @@ fastapi
 uvicorn
 python-multipart  #for adding the routers
 pypdf
+google-genai
+Python_dotenv
