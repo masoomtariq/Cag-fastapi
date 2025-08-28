@@ -30,7 +30,7 @@ def home():
                 </p>
             </div>
         </body>
-    </html
+    </html>
     """
     return HTMLResponse(content=html_content, status_code=200)
 
