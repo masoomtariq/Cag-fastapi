@@ -19,7 +19,6 @@ def home():
         </head>
         <body>
             <div>
-                class = "container"
                 <h1>
                     Welcome to cag project api
                 </h1>
