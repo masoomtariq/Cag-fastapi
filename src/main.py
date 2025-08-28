@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, html
 from router import the_router, counter, data_store, data_path
 import os, shutil
 
@@ -7,6 +7,31 @@ app = FastAPI(title="THis is the cag project")
 
 @app.get('/')
 def home():
+
+    html_content = """
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>
+                Cag Project APi
+            </title>
+        </head>
+        <body>
+            <div>
+                class = "container"
+                <h1>
+                    Welcome to cag project api
+                </h1>
+                <p>
+                    View automatically the documentation here:
+                </p>
+                <p>
+                    <a href="/docs" target="_blank">swager UI (OpenAI docs)</a>
+                </p>
+            </div>
+        </body>
+    </html>
+    """
     return {"content": "Hellow"}
 
 app.include_router(router= the_router, prefix='/api/file', tags=["Data handling and CHat with the files"])
