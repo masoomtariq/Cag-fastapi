@@ -9,7 +9,7 @@ app = FastAPI(title="THis is the cag project")
 def home():
     return {"content": "Hellow"}
 
-app.include_router(router= the_router, prefix='/api/file')
+app.include_router(router= the_router, prefix='/api/file', tags=["Data handling and CHat with the files"])
 
 @app.get('/list_files')
 def list_files():
@@ -18,15 +18,13 @@ def list_files():
 
     # filter only files
     files = [f for f in all_items if os.path.isfile(os.path.join(data_path, f))]
-    '/n'.join(files)
-
-    return {"message": f"There are {counter} files stored.", "Files in directory": files}
+    
+    return {"message": f"There are {len(files)} files stored.", "Files in directory": files}
 
 @app.delete('/reset_files')
 def reset_datastore():
 
     global counter
-    global data_store
     data_store.clear()
     counter = 0
     shutil.rmtree(data_path)
