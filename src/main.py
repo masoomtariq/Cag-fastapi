@@ -1,11 +1,12 @@
-from fastapi import FastAPI, html
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse 
 from router import the_router, counter, data_store, data_path
 import os, shutil
 
 
 app = FastAPI(title="THis is the cag project")
 
-@app.get('/')
+@app.get('/', response_class=HTMLResponse, tags=['Root'])
 def home():
 
     html_content = """
@@ -32,7 +33,7 @@ def home():
         </body>
     </html>
     """
-    return {"content": "Hellow"}
+    return HTMLResponse(content=html_content, status_code=200)
 
 app.include_router(router= the_router, prefix='/api/file', tags=["Data handling and CHat with the files"])
 
