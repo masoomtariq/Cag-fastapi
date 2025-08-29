@@ -15,7 +15,7 @@ def get_llm_response(context: str, query: str) -> str:
 
     client = genai.Client(api_key= api_key)
 
-    model = ''
+    model = "gemma-3-1b-it"
 
     contents = [types.Content(role='user',parts=[types.Part.from_text(text=query)])]
 
