@@ -25,7 +25,7 @@ def get_llm_response(context: str, query: str) -> str:
 
 context = "Nothing"
 
-query = "WHat you can do for me"
+query = "Can you tell me what is my name that I had told you before"
 
 api_key = os.getenv("GOOGLE_API_KEY")
 
