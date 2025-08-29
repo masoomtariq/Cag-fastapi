@@ -41,8 +41,4 @@ contents = [types.Content(role='user',parts=[types.Part.from_text(text=query)])]
 
 generate_content_config = types.GenerateContentConfig(temperature=0, response_mime_type='text/plain', system_instruction=[types.Part.from_text(text=context)], thinking_config=types.ThinkingConfig(thinking_budget=0))
 
-for chunk in client.models.generate_content_stream(
-                            model=model,
-                            contents=contents,
-                            config=generate_content_config):
-    print(chunk.text, end='')
+client.models.generate_content(model=model, contents=contents, con)
