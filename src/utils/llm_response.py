@@ -34,13 +34,14 @@ if api_key is None:
 
 client = genai.Client(api_key= api_key)
 
-model = "gemma-3-1b-it"
+model = "gemini-2.5-flash-lite"
 
 contents = [types.Content(role='user',parts=[types.Part.from_text(text=query)])]
 
-generate_content_config = types.GenerateContentConfig(temperature=0, response_mime_type='text/plain', system_instruction=[types.Part.from_text(text=context)])
+generate_content_config = types.GenerateContentConfig(temperature=0, response_mime_type='text/plain', thinking_config=types.ThinkingConfig(thinking_budget=0))
 
-response = client.models.generate_content_stream(model=model, contents=contents, config=generate_content_config)
-
-for chunk in response:
-    chunk
+for chunk in client.models.generate_content_stream(
+                            model=model,
+                            contents=contents,
+                            config=generate_content_config):
+    print(chunk.text, end='')
