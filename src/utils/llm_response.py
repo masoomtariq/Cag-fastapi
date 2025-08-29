@@ -25,7 +25,7 @@ def get_llm_response(context: str, query: str) -> str:
 
 context = "Nothing"
 
-query = "Can you tell me what is my name that I had told you before"
+query = "Hii"
 
 api_key = os.getenv("GOOGLE_API_KEY")
 
@@ -41,4 +41,6 @@ contents = [types.Content(role='user',parts=[types.Part.from_text(text=query)])]
 
 generate_content_config = types.GenerateContentConfig(temperature=0, response_mime_type='text/plain', system_instruction=[types.Part.from_text(text=context)], thinking_config=types.ThinkingConfig(thinking_budget=0))
 
-client.models.generate_content(model=model, contents=contents, config=generate_content_config)
+resposne = client.models.generate_content(model=model, contents=contents, config=generate_content_config)
+
+print(resposne.text)
