@@ -24,7 +24,8 @@ def get_llm_response(context: str, query: str) -> str:
     response = client.models.generate_content_stream(model=model, contents=contents, config=generate_content_config)
 
 context = "Nothing"
-query = 'Who are you'
+
+query = 'Hi'
 
 api_key = os.getenv("GOOGLE_API_KEY")
 
@@ -38,7 +39,7 @@ model = "gemini-2.5-flash-lite"
 
 contents = [types.Content(role='user',parts=[types.Part.from_text(text=query)])]
 
-generate_content_config = types.GenerateContentConfig(temperature=0, response_mime_type='text/plain', thinking_config=types.ThinkingConfig(thinking_budget=0))
+generate_content_config = types.GenerateContentConfig(temperature=0, response_mime_type='text/plain', system_instruction=[types.Part.from_text(text=context)], thinking_config=types.ThinkingConfig(thinking_budget=0))
 
 for chunk in client.models.generate_content_stream(
                             model=model,
