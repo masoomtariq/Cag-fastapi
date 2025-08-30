@@ -12,35 +12,16 @@ def get_llm_response(context: str, query: str) -> str:
     if api_key is None:
         raise ValueError("GOOGLE API KEY environment variable is not set."
                         "Please set it to your Google Gemini Api Key (Get key from https://aistudio.google.com/apikey)")
-
     client = genai.Client(api_key= api_key)
-
-    model = "gemma-3-1b-it"
 
     contents = [types.Content(role='user',parts=[types.Part.from_text(text=query)])]
 
-    generate_content_config = types.GenerateContentConfig(temperature=0, response_mime_type='text/plain', system_instruction=[types.Part.from_text(text=context)])
+    generate_content_config = types.GenerateContentConfig(temperature=0,
+                                response_mime_type='text/plain',
+                                system_instruction=[types.Part.from_text(text=context)],
+                                thinking_config=types.ThinkingConfig(thinking_budget=0))
 
-    response = client.models.generate_content_stream(model=model, contents=contents, config=generate_content_config)
+    response = client.models.generate_content(model="gemini-2.5-flash-lite",
+                                              contents=contents, config=generate_content_config)
 
-context = "Nothing"
-
-query = "Hii"
-
-api_key = os.getenv("GOOGLE_API_KEY")
-
-if api_key is None:
-    raise ValueError("GOOGLE API KEY environment variable is not set."
-                    "Please set it to your Google Gemini Api Key (Get key from https://aistudio.google.com/apikey)")
-
-client = genai.Client(api_key= api_key)
-
-model = "gemini-2.5-flash-lite"
-
-contents = [types.Content(role='user',parts=[types.Part.from_text(text=query)])]
-
-generate_content_config = types.GenerateContentConfig(temperature=0, response_mime_type='text/plain', system_instruction=[types.Part.from_text(text=context)], thinking_config=types.ThinkingConfig(thinking_budget=0))
-
-resposne = client.models.generate_content(model=model, contents=contents, config=generate_content_config)
-
-print(resposne.text)
+    return response.text
