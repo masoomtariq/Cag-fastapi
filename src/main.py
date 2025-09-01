@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse 
 from router import the_router, counter, data_store, data_path
 import os, shutil
@@ -34,7 +33,9 @@ def home():
     </html>
     """
     return HTMLResponse(content=html_content, status_code=200)
-
+@app.get('/my')
+def tryapi(request: Request):
+    return {'method': request.method, 'url': request.url, 'body': request.headers}
 
 app.include_router(router= the_router, prefix='/file', tags=["Data handling: uploading to deleting the files"])
 
