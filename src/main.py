@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 
 from fastapi.responses import HTMLResponse 
 from router import the_router, counter, data_store, data_path
