@@ -12,11 +12,10 @@ templates = Jinja2Templates(directory='templates')
 
 @app.get('/', response_class=HTMLResponse, tags=['Root'])
 def home(request: Request):
-
-    return templates.TemplateResponse(request=request, name='home.html', )
+    return templates.TemplateResponse(request=request, name='home.html')
 @app.get('/my')
 def tryapi(request: Request):
-    return {'method': request.method, 'url': request.url, 'body': request.headers}
+    return templates.TemplateResponse(request=request, name='sample.html', context={})
 
 app.include_router(router= the_router, prefix='/file', tags=["Data handling: uploading to deleting the files"])
 
