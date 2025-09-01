@@ -5,7 +5,7 @@ from router import the_router, counter, data_store, data_path
 import os, shutil
 
 
-app = FastAPI(title="THis is the cag project")
+app = FastAPI(title="This is the cag project")
 
 @app.get('/', response_class=HTMLResponse, tags=['Root'])
 def home():
