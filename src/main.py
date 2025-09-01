@@ -8,7 +8,6 @@ app = FastAPI(title="This is the cag project")
 
 @app.get('/', response_class=HTMLResponse, tags=['Root'])
 def home():
-
     return HTMLResponse(content=html_content, status_code=200)
 @app.get('/my')
 def tryapi(request: Request):
