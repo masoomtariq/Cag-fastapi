@@ -34,4 +34,4 @@ def get_llm_response(context: str, query: str) -> str:
     response = client.models.generate_content(model="gemini-2.5-flash-lite",
                                               contents=contents, config=generate_content_config)
 
-    return response.text
+    return response

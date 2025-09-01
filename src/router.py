@@ -74,4 +74,6 @@ def query_document(id: int = Path(...), query: str = Query(default='')):
         raise HTTPException(status_code=401, detail=f"The given id '{id}' not exists.")
     file_content = data_store[id]
 
-    
+    response = get_llm_response(context=file_content, query=query)
+
+    return {}
