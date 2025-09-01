@@ -1,14 +1,19 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse 
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates 
 from router import the_router, counter, data_store, data_path
 import os, shutil
 
 
 app = FastAPI(title="This is the cag project")
 
+# Point to your templates directory
+templates = Jinja2Templates(directory='templates')
+
 @app.get('/', response_class=HTMLResponse, tags=['Root'])
-def home():
-    return HTMLResponse(content=html_content, status_code=200)
+def home(request: Request):
+
+    return templates.TemplateResponse(request=request, name='home.html', )
 @app.get('/my')
 def tryapi(request: Request):
     return {'method': request.method, 'url': request.url, 'body': request.headers}
