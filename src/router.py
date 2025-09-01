@@ -1,6 +1,5 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import extract_text
-from utils.llm_response import get_llm_response
 import os
 
 counter = 0
@@ -67,13 +66,3 @@ def delete_file(id: int):
     del data_store[id]
 
     return {"message": "The file/files has been deleted", "ID": id}
-
-@the_router.get('get/{id}')
-def query_document(id: int = Path(...), query: str = Query(default='')):
-    if id not in data_store:
-        raise HTTPException(status_code=401, detail=f"The given id '{id}' not exists.")
-    file_content = data_store[id]
-
-    response = get_llm_response(context=file_content, query=query)
-
-    return {'message': response.text}
