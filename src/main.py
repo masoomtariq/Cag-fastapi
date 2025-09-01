@@ -15,7 +15,7 @@ def home(request: Request):
     return templates.TemplateResponse(request=request, name='home.html')
 @app.get('/my')
 def tryapi(request: Request):
-    return templates.TemplateResponse(request=request, name='sample.html', context={})
+    return templates.TemplateResponse(request=request, name='sample.html', context={'title': "Home Page", 'name': "Masoom"})
 
 app.include_router(router= the_router, prefix='/file', tags=["Data handling: uploading to deleting the files"])
 
