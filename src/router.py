@@ -76,4 +76,4 @@ def query_document(id: int = Path(...), query: str = Query(default='')):
 
     response = get_llm_response(context=file_content, query=query)
 
-    return {}
+    return {'message': response.text}
