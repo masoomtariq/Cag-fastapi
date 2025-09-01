@@ -1,4 +1,4 @@
-from fastapi import File, UploadFile, APIRouter, HTTPException
+from fastapi import File, UploadFile, APIRouter, HTTPException, Path
 from utils.file_processing import extract_text
 import os
 
@@ -30,8 +30,6 @@ def add_file(file: UploadFile = File(...)):
     return {'message': "File uploaded and text extracted succesfully",
             'ID': counter}
     
-
-
 @the_router.put('/update/{id}')
 def update_the_existing_file(id: int, file: UploadFile = File(...)):
 
@@ -69,3 +67,5 @@ def delete_file(id: int):
 
     return {"message": "The file/files has been deleted", "ID": id}
 
+@the_router.get('get/{id}')
+def query_document(id: int = Path(...), query: str )
