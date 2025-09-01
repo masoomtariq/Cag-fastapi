@@ -35,6 +35,7 @@ def home():
     """
     return HTMLResponse(content=html_content, status_code=200)
 
+
 app.include_router(router= the_router, prefix='/file', tags=["Data handling: uploading to deleting the files"])
 
 @app.get('/list_files')
