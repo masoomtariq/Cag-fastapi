@@ -9,29 +9,6 @@ app = FastAPI(title="This is the cag project")
 @app.get('/', response_class=HTMLResponse, tags=['Root'])
 def home():
 
-    html_content = """
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <title>
-                Cag Project APi
-            </title>
-        </head>
-        <body>
-            <div>
-                <h1>
-                    Welcome to cag project api
-                </h1>
-                <p>
-                    View automatically the documentation here:
-                </p>
-                <p>
-                    <a href="/docs" target="_blank">swager UI (OpenAI docs)</a>
-                </p>
-            </div>
-        </body>
-    </html>
-    """
     return HTMLResponse(content=html_content, status_code=200)
 @app.get('/my')
 def tryapi(request: Request):
