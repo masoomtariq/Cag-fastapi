@@ -6,7 +6,8 @@ load_dotenv()
 
 database_url = os.getenv("MONGO_URL")
 
-client = MongoClient(database_url)
+#client = MongoClient(database_url)
+
 
 
 

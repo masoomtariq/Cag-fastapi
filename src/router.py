@@ -1,14 +1,12 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import extract_text
-import os
+import os, tempfile
 
 counter = 0
 data_store = {}
 
 the_router = APIRouter()
-
-data_path = 'tmp/uploads'
-
+data_path = f'{os.getcwd()}/tmp/uploads'
 os.makedirs(data_path, exist_ok=True)
 
 @the_router.post('/upload', status_code=201)
