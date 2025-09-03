@@ -1,17 +1,15 @@
 from pymongo.mongo_client import MongoClient
 from dotenv import load_dotenv
-from bson import ObjectId
 import os
+import time
 
 load_dotenv()
-
 database_url = os.getenv("MONGO_URL")
 
-client = MongoClient(database_url)
+with MongoClient(database_url) as client:
+    cag = client['cag_app']
+    coll = cag['docs_data']
+    coll.insert_one()
 
-cag = client.get_database('cag_app')
-
-docs = cag.get_collection(name="documents")
-
-d=docs.find()
-print(d)
+time.sleep(0.2)
+# client is closed automatically here
