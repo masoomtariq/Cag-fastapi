@@ -47,6 +47,7 @@ def query_file(id: int = Path(...), query: str = Query(default='')):
 
     return {'message': response.text}
 
+
 # Run the app using Uvicorn (used for local development)
 if __name__ == "__main__":
     import uvicorn
