@@ -1,7 +1,7 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import extract_text
-import os, tempfile
-
+from tempfile import NamedTemporaryFile
+import os
 
 counter = 0
 data_store = {}
@@ -14,6 +14,9 @@ os.makedirs(data_path, exist_ok=True)
 def add_file(file: UploadFile = File(...)):
 
     global counter
+    temp_global = counter+1
+
+    with 
 
     file_path = os.path.join(data_path, f"{counter+1}_{file.filename}")
     content = file.file.read()
