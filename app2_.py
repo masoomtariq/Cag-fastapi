@@ -12,4 +12,4 @@ with open('/workspaces/Cag/tmp/uploads/1_ASSIST Manual.pdf', 'rb') as file:
         print(tempfile.name)
 
 
-print(text)
+print(text[:100])
