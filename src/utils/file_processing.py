@@ -1,8 +1,10 @@
 from pypdf import PdfReader
+from tempfile import NamedTemporaryFile
 
-
+files_path = 'tmp/uploads'
 
 def extract_text(file_path):
+
     full_text = []
     text = ''
     try:
@@ -16,3 +18,13 @@ def extract_text(file_path):
     except FileNotFoundError:
         print(f"The file is not found at the path '{file_path}'")
         return ''
+    
+def load_and_extract(id, file_object):
+
+    prefix, suffix = file_object.filename.split('.')
+    with NamedTemporaryFile(dir=files_path,
+                            prefix=f'{id}_{prefix}_',
+                            suffix=suffix, delete= True) as temp_file:
+        
+        text = extract_text(temp_file.name)
+        return text
