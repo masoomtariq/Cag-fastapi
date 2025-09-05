@@ -25,6 +25,7 @@ def load_and_extract(id, file_object):
     with NamedTemporaryFile(dir=files_path,
                             prefix=f'{id}_{prefix}_',
                             suffix=suffix, delete= True) as temp_file:
+        temp_file.write(file_object.file.read())
         
         text = extract_text(temp_file.name)
         return text
