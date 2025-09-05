@@ -2,6 +2,7 @@ from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import extract_text
 import os, tempfile
 
+
 counter = 0
 data_store = {}
 
