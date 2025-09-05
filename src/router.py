@@ -1,22 +1,22 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import extract_text
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, tempdir
 import os
 
 counter = 0
 data_store = {}
+files_path = f'{os.getcwd}/tmp/uploads'
 
 the_router = APIRouter()
-data_path = f'{os.getcwd()}/tmp/uploads'
-os.makedirs(data_path, exist_ok=True)
 
 @the_router.post('/upload', status_code=201)
 def add_file(file: UploadFile = File(...)):
 
     global counter
-    temp_global = counter+1
+    current_id = counter + 1
 
-    with 
+    
+    with NamedTemporaryFile(dir=files_path, prefix=f'{current_id}_')
 
     file_path = os.path.join(data_path, f"{counter+1}_{file.filename}")
     content = file.file.read()
