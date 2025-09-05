@@ -16,19 +16,15 @@ def add_file(file: UploadFile = File(...)):
     global counter
     current_id = counter + 1
 
-    try:
-        extracted_text = load_and_extract(id=current_id, file_object=file)
-        
-        if extracted_text is None:
-            raise HTTPException(status_code=401, detail="Fail to extract text from the file.")
-        counter +=1
-        data_store[counter] = extracted_text
-        return {'message': "File uploaded and text extracted succesfully",
-                'ID': counter}
     
-    except Exception as e:
-        raise HTTPException(status_code=500,
-                            detail=f"An error accured during the file processing: {str(e)}")
+    extracted_text = load_and_extract(id=current_id, file_object=file)
+    
+    if extracted_text is None:
+        raise HTTPException(status_code=401, detail="Fail to extract text from the file.")
+    counter +=1
+    data_store[counter] = extracted_text
+    return {'message': "File uploaded and text extracted succesfully",
+            'ID': counter}
 
 
 @the_router.put('/update/{id}')
@@ -52,7 +48,7 @@ def update_the_existing_file(id: int, file: UploadFile = File(...)):
 
 @the_router.delete('/delete/{id}')
 def delete_file(id: int):
-    
+
     if id not in data_store:
         raise HTTPException(status_code=401, detail=f"The given id '{id}' not exists.")
     
