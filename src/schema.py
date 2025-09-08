@@ -6,8 +6,13 @@ from zoneinfo import ZoneInfo
 
 now = datetime.now(ZoneInfo("Asia/Karachi"))
 
-print(f'{now} --- {type(now.ctime())}')
+noww = now.isoformat(sep="\u002D", timespec='minutes') #"\u002D" is the unicode character of '-'
 
+d = noww.split('-')
+
+t = '--T->'.join(d)
+
+print(t)
 class FILE_INFO(BaseModel):
     title: str
     file_type: str
