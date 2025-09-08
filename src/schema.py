@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 now = datetime.now(ZoneInfo("Asia/Karachi"))
 
-print(f'{now} --- {now.ctime()}')
+print(f'{now} --- {type(now.ctime())}')
 
 class FILE_INFO(BaseModel):
     title: str
