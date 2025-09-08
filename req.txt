@@ -6,3 +6,4 @@ pypdf
 google-genai
 Python_dotenv
 pymongo[srv]==3.12
+datetime
