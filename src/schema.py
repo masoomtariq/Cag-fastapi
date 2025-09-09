@@ -19,3 +19,7 @@ class FILE_INFO(BaseModel):
     file_type: str
     uploaded_at: Annotated[datetime, Field(default_factory= datetime.now(pkt_zone))]
     size: int
+
+df = FILE_INFO(title="VS code", file_type='pdf', size=456789)
+
+# print(df)
