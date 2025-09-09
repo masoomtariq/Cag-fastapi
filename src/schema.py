@@ -9,6 +9,5 @@ class FILE_INFO(BaseModel):
     uploaded_at: Annotated[datetime, Field(default_factory=datetime_func())]
     size: int
 
-df = FILE_INFO(title="VS code", file_type='pdf', size=456789)
-
-print(df)
+class FILES(BaseModel):
+    
