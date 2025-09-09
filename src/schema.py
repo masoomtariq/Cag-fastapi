@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Annotated
+from typing import Annotated, List
 from datetime import datetime
 from utils.others import datetime_func
 
@@ -10,4 +10,6 @@ class FILE_INFO(BaseModel):
     size: int
 
 class FILES(BaseModel):
-    
+    id : str
+    files: List[FILE_INFO]
+    combined_contentt: str
