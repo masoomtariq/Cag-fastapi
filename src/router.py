@@ -25,8 +25,9 @@ def add_file(file: UploadFile = File(...)):
 
     file_info = create_file_info(file_object=file)
 
-    files_ = FILES(id=counter, files=[file_info], combined_content= extracted_text)
+    files_object = FILES(id=counter, files=[file_info], combined_content= extracted_text)
 
+    add_file(file=files_object.model)
     return {'message': "File uploaded and text extracted succesfully",
             'ID': counter}
 
