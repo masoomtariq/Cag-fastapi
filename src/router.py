@@ -1,11 +1,9 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import load_and_extract
+from schema import FILES
 import os
 
-counter = 0
-data_store = {}
 files_path = 'tmp/uploads'
-
 os.makedirs(files_path, exist_ok=True)
 
 the_router = APIRouter()
