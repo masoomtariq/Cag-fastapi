@@ -1,6 +1,6 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import load_and_extract
-from schema import FILES
+from schema import FILES, FILE_INFO
 import os
 
 files_path = 'tmp/uploads'
