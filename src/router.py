@@ -20,6 +20,7 @@ def add_file(file: UploadFile = File(...)):
     if extracted_text is None:
         raise HTTPException(status_code=401, detail="Fail to extract text from the file.")
     counter +=1
+    
     data_store[counter] = extracted_text
     return {'message': "File uploaded and text extracted succesfully",
             'ID': counter}
