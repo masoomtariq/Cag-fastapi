@@ -1,8 +1,8 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from schema import FILE_INFO, FILES
+from schema import FILE_INFO
 from fastapi import UploadFile
-import os
+
 def datetime_func():
     pkt_zone = ZoneInfo("Asia/Karachi")
 
