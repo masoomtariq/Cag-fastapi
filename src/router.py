@@ -15,7 +15,7 @@ def add_file(file: UploadFile = File(...)):
     current_id = counter + 1
 
     
-    extracted_text = load_and_extract(id=current_id, file_object=file)
+    extracted_text = load_and_extract(id=current_id, file_object=file) #id for naming the file
     
     if extracted_text is None:
         raise HTTPException(status_code=401, detail="Fail to extract text from the file.")
