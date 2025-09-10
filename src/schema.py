@@ -6,7 +6,7 @@ from utils.others import datetime_func
 class FILE_INFO(BaseModel):
     title: str
     file_type: str
-    uploaded_at: Annotated[datetime, Field(default_factory=datetime_func)]
+    uploaded_at: Annotated[str, Field(default_factory=datetime_func)]
     size_mb: int
 
 class FILES(BaseModel):
@@ -18,4 +18,4 @@ f = FILE_INFO(title="this", file_type='dhl', size_mb=123)
 
 files = FILES(id = 1, files=[f], combined_content='dkhfkjd')
 
-print(type(f.uploaded_at))
+print(files.model_dump())
