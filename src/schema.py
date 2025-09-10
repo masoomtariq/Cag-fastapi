@@ -13,9 +13,3 @@ class FILES(BaseModel):
     id : int
     files: List[FILE_INFO]
     combined_content: str
-
-f = FILE_INFO(title="this", file_type='dhl', size_mb=123)
-
-files = FILES(id = 1, files=[f], combined_content='dkhfkjd')
-
-print(files.model_dump())
