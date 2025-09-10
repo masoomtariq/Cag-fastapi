@@ -15,3 +15,12 @@ def add_file(FIlES: Dict):
         inserted = collection.insert_one(FIlES)
 
     time.sleep(0.2)
+
+def verify_id(id: int):
+    with MongoClient(connection_url) as client:
+        database = client['cag_app']
+        collection = database['docs_data']
+        collection.fin
+        print(collection.list_indexes())
+
+verify_id(2)
