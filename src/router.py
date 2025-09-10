@@ -1,6 +1,8 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import load_and_extract
-from schema import FILES, FILE_INFO
+from utils.schema_helper import create_file_info
+from schema import FILES
+from utils.db import add_file
 import os
 
 files_path = 'tmp/uploads'
@@ -20,8 +22,11 @@ def add_file(file: UploadFile = File(...)):
     if extracted_text is None:
         raise HTTPException(status_code=401, detail="Fail to extract text from the file.")
     counter +=1
-    
-    data_store[counter] = extracted_text
+
+    file_info = create_file_info(file_object=file)
+
+    files_ = FILES(id=counter, files=[file_info], combined_content= extracted_text)
+
     return {'message': "File uploaded and text extracted succesfully",
             'ID': counter}
 

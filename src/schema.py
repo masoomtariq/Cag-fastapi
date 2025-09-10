@@ -12,4 +12,8 @@ class FILE_INFO(BaseModel):
 class FILES(BaseModel):
     id : str
     files: List[FILE_INFO]
-    combined_contentt: str
+    combined_content: str
+
+files = FILES(id = 1, files=[FILE_INFO(title="this", file_type='dhl', size_mb=123)], combined_content='dkhfkjd')
+
+print(files)
