@@ -16,5 +16,10 @@ def datetime_func():
 
 def create_model(file_object: UploadFile):
     title, filetype = file_object.filename.split(',')
-    size= os.path.getsize(file)
-    FILE_INFO(title= title.strip(), file_type=filetype.strip(), s)
+
+    file_object.file.seek(0, 2)   # Move to end of file
+    size_in_bytes = file_object.file.tell()  # Position = total size in bytes
+    file_object.file.seek(0)      # Reset pointer back to start
+
+    size_in_mb = round(size_in_bytes/(1024**2), 2)
+    FILE_INFO(title= title.strip(), file_type=filetype.strip(), size_mb=)

@@ -7,7 +7,7 @@ class FILE_INFO(BaseModel):
     title: str
     file_type: str
     uploaded_at: Annotated[datetime, Field(default_factory=datetime_func())]
-    size: int
+    size_mb: int
 
 class FILES(BaseModel):
     id : str
