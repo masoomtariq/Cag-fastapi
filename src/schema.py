@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Annotated, List
 from datetime import datetime
-from utils.schema_helper import datetime_func
+from utils.others import datetime_func
 
 class FILE_INFO(BaseModel):
     title: str
