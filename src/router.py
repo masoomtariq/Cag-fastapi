@@ -2,7 +2,7 @@ from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import load_and_extract
 from utils.schema_helper import create_file_info
 from schema import FILES
-from utils.db import add_file
+from utils.db import add_file, verify_id
 import os
 
 files_path = 'tmp/uploads'
@@ -35,15 +35,15 @@ def add_file(file: UploadFile = File(...)):
 @the_router.put('/update/{id}')
 def update_the_existing_file(id: int, file: UploadFile = File(...)):
 
-    if id not in data_store:
-        raise HTTPException(status_code=401, detail=f"The given id '{id}' not exists.")
+    verify_id(id=id)
     
     try:
         extracted_text = load_and_extract(id=id, file_object=file)
 
         if extracted_text is None:
             raise HTTPException(status_code=401, detail="Fail to extract text from the file.")
-        data_store[counter] += extracted_text
+        file_data = create_file_info(file_object=file)
+        
 
         return {'message': "File uploaded and text updated successfully at the existing id",
                 'ID': id}

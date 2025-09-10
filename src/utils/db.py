@@ -1,26 +1,24 @@
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from typing import Dict
+from fastapi import HTTPException
 import os, time
 
 load_dotenv()
 
 connection_url = os.getenv('MONGO_URL')
 
-def add_file(FIlES: Dict):
-    with MongoClient(connection_url) as client:
-        database = client['cag_app']
-        collection = database['docs_data']
-
-        inserted = collection.insert_one(FIlES)
-
-    time.sleep(0.2)
+with MongoClient(connection_url) as client:
+    database = client['cag_app']
+    collection = database['docs_data']
 
 def verify_id(id: int):
-    with MongoClient(connection_url) as client:
-        database = client['cag_app']
-        collection = database['docs_data']
-        collection.fin
-        print(collection.list_indexes())
+    ids = collection.distinct('id')
+    if id not in ids:
+        raise HTTPException(status_code=401, detail=f"The given id '{id}' not exists.")
 
-verify_id(2)
+def add_file(FIlES: Dict):
+    inserted = collection.insert_one(FIlES)
+
+def update_file_data(id: int, file_data: Dict):
+    collection.find_one_and_update({'id': id}, update=)
