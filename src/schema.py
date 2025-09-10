@@ -18,4 +18,4 @@ f = FILE_INFO(title="this", file_type='dhl', size_mb=123)
 
 files = FILES(id = 1, files=[f], combined_content='dkhfkjd')
 
-print(files.dict())
+print(type(f.uploaded_at))
