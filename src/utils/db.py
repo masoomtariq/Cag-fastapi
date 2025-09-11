@@ -28,3 +28,9 @@ def update_file_data(id: int, file_data: Dict, file_text: str):
 
 def delete_file_data(id: int):
     collection.delete_one({'id': id})
+
+def list_files():
+    titles = collection.distinct({'title'})
+    extensions = collection.distinct({'title'})
+
+    return titles + extensions
