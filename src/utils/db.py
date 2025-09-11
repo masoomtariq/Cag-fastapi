@@ -20,5 +20,11 @@ def verify_id(id: int):
 def add_file(FIlES: Dict):
     inserted = collection.insert_one(FIlES)
 
-def update_file_data(id: int, file_data: Dict):
-    collection.find_one_and_update({'id': id}, update=)
+def update_file_data(id: int, file_data: Dict, file_text: str):
+
+    files_info = collection.find_one({'id': id})
+    files_info['files'].append(file_data)
+    files_info['combined_content'] += file_text
+
+def delete_file_data(id: int):
+    collection.delete_one({'id': id})
