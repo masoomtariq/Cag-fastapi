@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from router import the_router, counter, data_store
 from utils.llm_response import get_llm_response
-from utils.db import list_files
+from utils.db import list_files, delete_collection
 
 app = FastAPI(title="This is the cag project")
 
@@ -25,7 +25,7 @@ def list_files():
 def reset_datastore():
 
     global counter
-    data_store.clear()
+    delete_collection()
     counter = 0
 
     return {"message": "All the files the and their records has been deleted successfully."}
