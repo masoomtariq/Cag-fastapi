@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from router import the_router, counter, data_store
 from utils.llm_response import get_llm_response
+from utils.db import list_files
 
 app = FastAPI(title="This is the cag project")
 
@@ -16,7 +17,7 @@ def home(request: Request):
 @app.get('/list_files')
 def list_files():
     # list all files and directories
-    files = ['', '']
+    files = list_files
     
     return {"message": f"There are {len(files)} files stored.", "Files in directory": files}
 

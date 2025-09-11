@@ -34,3 +34,6 @@ def list_files():
     extensions = collection.distinct({'title'})
 
     return titles + extensions
+
+def delete_collection():
+    database.drop_collection('')

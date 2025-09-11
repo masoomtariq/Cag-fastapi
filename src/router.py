@@ -56,7 +56,6 @@ def update_the_existing_file(id: int, file: UploadFile = File(...)):
 def delete_file(id: int):
 
     verify_id(id=id)
-    
     delete_file(id=id)
 
     return {"message": "The file/files has been deleted", "ID": id}
