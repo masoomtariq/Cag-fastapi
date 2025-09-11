@@ -36,4 +36,4 @@ def list_files():
     return titles + extensions
 
 def delete_collection():
-    database.drop_collection('')
+    database.drop_collection('docs_data')
