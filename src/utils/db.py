@@ -1,8 +1,7 @@
 from pymongo import MongoClient
 from dotenv import load_dotenv
-from typing import Dict
 from fastapi import HTTPException
-import os, time
+import os
 
 load_dotenv()
 
