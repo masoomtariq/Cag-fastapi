@@ -37,3 +37,8 @@ def list_files():
 
 def delete_collection():
     database.drop_collection('docs_data')
+
+def get_text(id: int):
+    result = collection.find_one({'id': id})
+
+    return result['combined_content']

@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from router import the_router, counter, data_store
 from utils.llm_response import get_llm_response
-from utils.db import list_files, delete_collection
+from utils.db import verify_id, list_files, delete_collection, get_text
 
 app = FastAPI(title="This is the cag project")
 
@@ -34,9 +34,9 @@ app.include_router(router= the_router, prefix='/file', tags=["Data handling: upl
 
 @app.get('/query/{id}', tags=["Chat with Files"])
 def query_file(id: int = Path(...), query: str = Query(default='')):
-    if id not in data_store:
-        raise HTTPException(status_code=401, detail=f"The given id '{id}' not exists.")
-    file_content = data_store[id]
+    verify_id(id= id)
+    
+    file_content = get_text(id= id)
 
     response = get_llm_response(context=file_content, query=query)
 
