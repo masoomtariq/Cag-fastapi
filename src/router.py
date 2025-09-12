@@ -1,7 +1,7 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import load_and_extract
 from utils.schema_helper import create_file_info
-from utils.db import add_file, verify_id, update_file_data, delete_file
+from utils.db import get_collection, verify_id
 from schema import FILES
 import os
 
@@ -27,7 +27,9 @@ def add_file(file: UploadFile = File(...)):
 
     files_info = FILES(id=counter, files=[file_info], combined_content= extracted_text)
 
-    add_file(file=files_info.model_dump())
+    collection = get_collection()
+    collection.insert_one(files_info.model_dump())
+
     return {'message': "File uploaded and text extracted succesfully",
             'ID': counter}
 
@@ -44,7 +46,7 @@ def update_the_existing_file(id: int, file: UploadFile = File(...)):
             raise HTTPException(status_code=401, detail="Fail to extract text from the file.")
 
         file_data = create_file_info(file_object=file)
-        update_file_data(id=id, file_data=file_data, file_text=extracted_text)
+        collection = get_collection()
 
         return {'message': "File uploaded and text updated successfully at the existing id",
                 'ID': id}
@@ -56,6 +58,7 @@ def update_the_existing_file(id: int, file: UploadFile = File(...)):
 def delete_file(id: int):
 
     verify_id(id=id)
-    delete_file(id=id)
+    collection = get_collection()
+    collection.delete_one({'id': id})
 
     return {"message": "The file/files has been deleted", "ID": id}

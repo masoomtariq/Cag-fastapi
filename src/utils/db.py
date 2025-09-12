@@ -7,38 +7,19 @@ import os, time
 load_dotenv()
 
 connection_url = os.getenv('MONGO_URL')
+def get_collection():
+    with MongoClient(connection_url) as client:
+        database = client['cag_app']
+        collection = database['docs_data']
+        return collection
 
-with MongoClient(connection_url) as client:
-    database = client['cag_app']
-    collection = database['docs_data']
-
+ids = get_collection().distinct('id')
 def verify_id(id: int):
-    ids = collection.distinct('id')
     if id not in ids:
         raise HTTPException(status_code=401, detail=f"The given id '{id}' not exists.")
-
-def add_file(FIlES: Dict):
-    inserted = collection.insert_one(FIlES)
-
-def update_file_data(id: int, file_data: Dict, file_text: str):
-
-    files_info = collection.find_one({'id': id})
-    files_info['files'].append(file_data)
-    files_info['combined_content'] += file_text
-
-def delete_file_data(id: int):
-    collection.delete_one({'id': id})
-
-def list_files():
-    titles = collection.distinct({'title'})
-    extensions = collection.distinct({'title'})
-
-    return titles + extensions
-
+    
 def delete_collection():
-    database.drop_collection('docs_data')
+    with MongoClient(connection_url) as client:
+        database = client['cag_app']
+        database.drop_collection('docs_app')
 
-def get_text(id: int):
-    result = collection.find_one({'id': id})
-
-    return result['combined_content']

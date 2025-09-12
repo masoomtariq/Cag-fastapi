@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from router import the_router, counter
 from utils.llm_response import get_llm_response
-from utils.db import verify_id, list_files, delete_collection, get_text
+from utils.db import verify_id, get_collection, delete_collection
 
 app = FastAPI(title="This is the cag project")
 
@@ -17,16 +17,19 @@ def home(request: Request):
 @app.get('/list_files')
 def list_files():
     # list all files and directories
-    files = list_files
-    
+    collection = get_collection()
+    titles = collection.distinct('title')
+    extensions = collection.distinct('file_type')
+    files = titles + extensions
+
     return {"message": f"There are {len(files)} files stored.", "Files in directory": files}
 
 @app.delete('/reset_files')
 def reset_datastore():
 
     global counter
-    delete_collection()
     counter = 0
+    delete_collection()
 
     return {"message": "All the files the and their records has been deleted successfully."}
 
@@ -36,9 +39,11 @@ app.include_router(router= the_router, prefix='/file', tags=["Data handling: upl
 def query_file(id: int = Path(...), query: str = Query(default='')):
     verify_id(id= id)
     
-    file_content = get_text(id= id)
+    collection = get_collection()
+    docs_data = collection.find_one({'id': id})
+    file_text = docs_data['combined_content']
 
-    response = get_llm_response(context=file_content, query=query)
+    response = get_llm_response(context=file_text, query=query)
 
     return {'message': response.text}
 
