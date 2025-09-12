@@ -1,8 +1,7 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import load_and_extract
-from utils.schema_helper import create_file_info
 from utils.db import get_collection, verify_id
-from schema import FILES
+from schema import FILES, create_file_info
 import os
 
 files_path = 'tmp/uploads'
@@ -29,7 +28,7 @@ def add_file(file: UploadFile = File(...)):
     files_info = FILES(id=counter, files=[file_info], combined_content= extracted_text)
 
     collection = get_collection()
-    collection.insert_one(files_info.model_dump())
+    collection.insert_one(files_info)
 
     return {'message': "File uploaded and text extracted succesfully",
             'ID': counter}
