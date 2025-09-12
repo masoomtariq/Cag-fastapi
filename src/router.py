@@ -28,7 +28,7 @@ def add_file(file: UploadFile = File(...)):
     files_info = FILES(id=counter, files=[file_info], combined_content= extracted_text)
 
     collection = get_collection()
-    collection.insert_one(files_info)
+    collection.insert_one(files_info.model_dump())
 
     return {'message': "File uploaded and text extracted succesfully",
             'ID': counter}
