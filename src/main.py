@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Request, Path, Query, HTTPException
+from fastapi import FastAPI, Request, Path, Query
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from router import the_router, counter, data_store
+from router import the_router, counter
 from utils.llm_response import get_llm_response
 from utils.db import verify_id, list_files, delete_collection, get_text
 
