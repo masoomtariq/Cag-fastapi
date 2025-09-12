@@ -8,6 +8,7 @@ import os
 files_path = 'tmp/uploads'
 os.makedirs(files_path, exist_ok=True)
 
+counter = 0
 the_router = APIRouter()
 
 @the_router.post('/upload', status_code=201)
