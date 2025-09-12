@@ -47,6 +47,11 @@ def update_the_existing_file(id: int, file: UploadFile = File(...)):
 
         file_data = create_file_info(file_object=file)
         collection = get_collection()
+        
+        file_content = collection.find_one({'id': id})['combined_content'] + extracted_text
+        collection.update_one({'id': id}, update={"$push": {'files': file_data},
+                                                  
+                                                  "$set": {'combined_content': file_content}})
 
         return {'message': "File uploaded and text updated successfully at the existing id",
                 'ID': id}
