@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Annotated, List
-from src.utils.helpers import datetime_func
+from utils.helpers import datetime_func
 from fastapi import UploadFile
 
 class FILE_INFO(BaseModel):
