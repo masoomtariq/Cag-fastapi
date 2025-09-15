@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Path, Query
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from router import the_router, counter
+from router import router, counter
 from utils.llm_response import get_llm_response
 from utils.db import verify_id, get_collection, delete_collection
 
@@ -33,7 +33,7 @@ def reset_datastore():
 
     return {"message": "All the files the and their records has been deleted successfully."}
 
-app.include_router(router= the_router, prefix='/file', tags=["Data handling: uploading to deleting the files"])
+app.include_router(router= router, prefix='/file', tags=["Data handling: uploading to deleting the files"])
 
 @app.get('/query/{id}', tags=["Chat with Files"])
 def query_file(id: int = Path(...), query: str = Query(default='')):
