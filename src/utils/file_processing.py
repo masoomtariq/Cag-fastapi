@@ -1,6 +1,7 @@
 from pypdf import PdfReader
 from tempfile import NamedTemporaryFile
-from src.db import check_filename
+from db import file_exists
+from fastapi import HTTPException
 
 files_path = 'tmp/uploads'
 
@@ -23,14 +24,12 @@ def extract_text(file_path):
 def load_and_extract(id, file_object):
 
     file_name, file_type = file_object.filename.split('.')
-    existing_file_text = check_filename(file_name)
-    if existing_file_text is None:
-        with NamedTemporaryFile(dir=files_path,
+    if file_exists(file_name):
+        raise HTTPException(status_code=401, detail=f"The file with name '{file_name}' already exists. Please rename the file and try again.")
+    with NamedTemporaryFile(dir=files_path,
                                 prefix=f'{id}_{file_name}_',
                                 suffix=file_type, delete= True) as temp_file:
             temp_file.write(file_object.file.read())
             
             text = extract_text(temp_file.name)
             return text
-    else:
-        return existing_file_text

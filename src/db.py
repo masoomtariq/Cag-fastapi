@@ -22,11 +22,9 @@ def delete_collection():
         database = client['cag_app']
         database.drop_collection('docs_data')
 
-def check_filename(filename: str):
+def file_exists(filename: str):
+
     collection = get_collection()
     file_names = collection.distinct('files.file_name')
-    if filename in file_names:
-        file_data = collection.find_one({'files.file_name': filename})
-        return file_data['file_content']
-    else:
-        return None
+
+    return filename in file_names
