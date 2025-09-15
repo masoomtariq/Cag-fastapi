@@ -1,7 +1,7 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import load_and_extract
 from utils.db import get_collection, verify_id
-from schema import FILES, create_file_info
+from src.models import FILES, create_file_info
 import os
 
 files_path = 'tmp/uploads'
