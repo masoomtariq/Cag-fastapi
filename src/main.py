@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Path, Query
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from src.files_router import router, counter
+from src.file_router import router, counter
 from utils.llm_response import get_llm_response
 from src.db import verify_id, get_collection, delete_collection
 
