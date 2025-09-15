@@ -16,9 +16,17 @@ ids = get_collection().distinct('id')
 def verify_id(id: int):
     if id not in ids:
         raise HTTPException(status_code=401, detail=f"The given id '{id}' not exists.")
-    
+   
 def delete_collection():
     with MongoClient(connection_url) as client:
         database = client['cag_app']
-        database.drop_collection('docs_app')
+        database.drop_collection('docs_data')
 
+def check_filename(filename: str):
+    collection = get_collection()
+    file_names = collection.distinct('files.file_name')
+    if filename in file_names:
+        file_data = collection.find_one({'files.file_name': filename})
+        return file_data['file_content']
+    else:
+        return None

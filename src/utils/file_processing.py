@@ -1,10 +1,11 @@
 from pypdf import PdfReader
 from tempfile import NamedTemporaryFile
+from src.db import check_filename
 
 files_path = 'tmp/uploads'
 
 def extract_text(file_path):
-
+ 
     full_text = []
     text = ''
     try:
@@ -21,11 +22,15 @@ def extract_text(file_path):
     
 def load_and_extract(id, file_object):
 
-    prefix, suffix = file_object.filename.split('.')
-    with NamedTemporaryFile(dir=files_path,
-                            prefix=f'{id}_{prefix}_',
-                            suffix=suffix, delete= True) as temp_file:
-        temp_file.write(file_object.file.read())
-        
-        text = extract_text(temp_file.name)
-        return text
+    file_name, file_type = file_object.filename.split('.')
+    existing_file_text = check_filename(file_name)
+    if existing_file_text is None:
+        with NamedTemporaryFile(dir=files_path,
+                                prefix=f'{id}_{file_name}_',
+                                suffix=file_type, delete= True) as temp_file:
+            temp_file.write(file_object.file.read())
+            
+            text = extract_text(temp_file.name)
+            return text
+    else:
+        return existing_file_text

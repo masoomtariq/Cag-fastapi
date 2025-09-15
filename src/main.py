@@ -20,7 +20,7 @@ def list_files():
     collection = get_collection()
     titles = collection.distinct('files.file_name')
     extensions = collection.distinct('files.file_type')
-    files = titles + extensions
+    files = [i+'.'+j for i, j in zip(titles, extensions)]
 
     return {"message": f"There are {len(files)} files stored.", "Files in directory": files}
 
@@ -47,6 +47,9 @@ def query_file(id: int = Path(...), query: str = Query(default='')):
 
     return {'message': response.text}
 
+@app.on_event('shutdown')
+def shutdown_session():
+    delete_collection()
 
 # Run the app using Uvicorn (used for local development)
 if __name__ == "__main__":

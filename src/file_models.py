@@ -6,6 +6,7 @@ from fastapi import UploadFile
 class FILE_INFO(BaseModel):
     file_name: str
     file_type: str
+    file_content: str
     uploaded_at: Annotated[str, Field(default_factory=datetime_func)]
     size_mb: int | float
 
@@ -14,7 +15,7 @@ class FILES(BaseModel):
     files: List[FILE_INFO]
     combined_content: str
 
-def create_file_info(file_object: UploadFile) -> dict:
+def create_file_info(file_object: UploadFile, file_text: str) -> dict:
     title, filetype = file_object.filename.split('.')
 
     file_object.file.seek(0, 2)   # Move to end of file
@@ -23,4 +24,4 @@ def create_file_info(file_object: UploadFile) -> dict:
 
     size_in_mb = round(size_in_bytes/(1024**2), 2)
 
-    return FILE_INFO(file_name=title.strip(), file_type=filetype.strip(), size_mb= size_in_mb).model_dump()
+    return FILE_INFO(file_name=title.strip(), file_type=filetype.strip(), file_content=file_text, size_mb= size_in_mb).model_dump()

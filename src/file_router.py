@@ -23,7 +23,7 @@ def add_file(file: UploadFile = File(...)):
         raise HTTPException(status_code=401, detail="Fail to extract text from the file.")
     counter +=1
 
-    file_info = create_file_info(file_object=file)
+    file_info = create_file_info(file_object=file, file_text=extracted_text)
 
     files_info = FILES(id=counter, files=[file_info], combined_content= extracted_text)
 
