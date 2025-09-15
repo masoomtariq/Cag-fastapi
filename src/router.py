@@ -59,7 +59,7 @@ def update_the_existing_file(id: int, file: UploadFile = File(...)):
         raise HTTPException(status_code=500,
                             detail=f"An error accured during the file processing: {str(e)}")
 
-@the_router.delete('/delete/{id}')
+@router.delete('/delete/{id}')
 def delete_file(id: int):
 
     verify_id(id=id)
