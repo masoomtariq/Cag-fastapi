@@ -8,7 +8,7 @@ files_path = 'tmp/uploads'
 os.makedirs(files_path, exist_ok=True)
 
 counter = 0
-the_router = APIRouter()
+router = APIRouter()
 
 @the_router.post('/upload', status_code=201)
 def add_file(file: UploadFile = File(...)):
