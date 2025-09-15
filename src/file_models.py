@@ -4,7 +4,7 @@ from src.utils.helpers import datetime_func
 from fastapi import UploadFile
 
 class FILE_INFO(BaseModel):
-    title: str
+    file_name: str
     file_type: str
     uploaded_at: Annotated[str, Field(default_factory=datetime_func)]
     size_mb: int | float
@@ -23,4 +23,4 @@ def create_file_info(file_object: UploadFile) -> dict:
 
     size_in_mb = round(size_in_bytes/(1024**2), 2)
 
-    return FILE_INFO(title= title.strip(), file_type=filetype.strip(), size_mb= size_in_mb).model_dump()
+    return FILE_INFO(file_name=title.strip(), file_type=filetype.strip(), size_mb= size_in_mb).model_dump()
