@@ -10,7 +10,7 @@ os.makedirs(files_path, exist_ok=True)
 counter = 0
 router = APIRouter()
 
-@the_router.post('/upload', status_code=201)
+@router.post('/upload', status_code=201)
 def add_file(file: UploadFile = File(...)):
 
     global counter
