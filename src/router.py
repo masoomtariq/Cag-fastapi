@@ -1,6 +1,6 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
 from utils.file_processing import load_and_extract
-from utils.db import get_collection, verify_id
+from src.db import get_collection, verify_id
 from src.file_models import FILES, create_file_info
 import os
 

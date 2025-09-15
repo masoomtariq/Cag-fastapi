@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from router import router, counter
 from utils.llm_response import get_llm_response
-from utils.db import verify_id, get_collection, delete_collection
+from src.db import verify_id, get_collection, delete_collection
 
 app = FastAPI(title="This is the cag project")
 
