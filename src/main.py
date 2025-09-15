@@ -18,8 +18,8 @@ def home(request: Request):
 def list_files():
     # list all files and directories
     collection = get_collection()
-    titles = collection.distinct('title')
-    extensions = collection.distinct('file_type')
+    titles = collection.distinct('files.file_name')
+    extensions = collection.distinct('files.file_type')
     files = titles + extensions
 
     return {"message": f"There are {len(files)} files stored.", "Files in directory": files}
