@@ -34,7 +34,7 @@ def add_file(file: UploadFile = File(...)):
             'ID': counter}
 
 
-@the_router.put('/update/{id}')
+@router.put('/update/{id}')
 def update_the_existing_file(id: int, file: UploadFile = File(...)):
 
     verify_id(id=id)
