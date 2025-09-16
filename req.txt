@@ -8,3 +8,4 @@ Python_dotenv
 pymongo[srv]==3.12
 datetime
 python-docx
+python-pptx

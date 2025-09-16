@@ -3,6 +3,8 @@ from tempfile import NamedTemporaryFile
 from db import file_exists
 from fastapi import HTTPException
 from docx import Document
+import pandas as pd
+from pptx import Presentation
 
 files_path = 'tmp/uploads'
 
@@ -38,7 +40,24 @@ def extract_pdf(file_path):
     except FileNotFoundError:
         print(f"The file is not found at the path '{file_path}'")
         return ''
-    
+
+def extract_excel(file_path: str, file_type: str):
+    if file_type == 'csv':
+        return pd.read_csv(file_path)
+    elif file_type in ['xls', 'xlsx', 'excel']:
+        return pd.read_excel(file_path)
+    else:
+        raise ValueError(f"Unsupported file type: {file_type}")
+
+def extract_pptx(file_path):
+    text = []
+    prs = Presentation(file_path)
+    for slide in prs.slides:
+        for shape in slide.shapes:
+            if hasattr(shape, 'text'):
+                text.append(shape.text)
+    return text
+
 def load_and_extract_file(id, file_object):
 
     file_name, file_type = file_object.filename.split('.')
