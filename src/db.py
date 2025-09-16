@@ -25,6 +25,8 @@ def delete_collection():
 def file_exists(filename: str):
 
     collection = get_collection()
-    file_names = collection.distinct('files.file_name')
+    titles = collection.distinct('files.file_name')
+    extensions = collection.distinct('files.file_type')
+    files = [i+'.'+j for i, j in zip(titles, extensions)]
 
-    return filename in file_names
+    return filename in files
