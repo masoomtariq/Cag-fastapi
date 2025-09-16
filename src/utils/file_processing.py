@@ -5,6 +5,11 @@ from fastapi import HTTPException
 from docx import Document
 import pandas as pd
 from pptx import Presentation
+import ebooklib
+from pypdf import PdfReader
+from pdf2image import convert_from_path
+import pytesseract
+from PIL import Image
 
 files_path = 'tmp/uploads'
 
@@ -12,6 +17,23 @@ def extract_txt(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         text = file.read()
     return text + '\n\n'
+
+def extract_pdf(file_path):
+ 
+    full_text = []
+    text = ''
+    try:
+        reader = PdfReader(file_path)
+        for index, page in enumerate(reader.pages):
+            text = page.extract_text().strip()
+            if text:
+                full_text.append(text)
+
+        text = '\n'.join(full_text)
+        return text + '\n\n'
+    except FileNotFoundError:
+        print(f"The file is not found at the path '{file_path}'")
+        return ''
 
 def extract_docx(file_path):
     try:
@@ -23,22 +45,6 @@ def extract_docx(file_path):
         return text + '\n\n'
     except Exception as e:
         print(f"An error occurred while processing the DOCX file: {e}")
-        return ''
-
-def extract_pdf(file_path):
- 
-    full_text = []
-    text = ''
-    try:
-        reader = PdfReader(file_path)
-        for i in reader.pages:
-            text = i.extract_text()
-            if text:
-                full_text.append(text)
-        text = '\n'.join(full_text)
-        return text + '\n\n'
-    except FileNotFoundError:
-        print(f"The file is not found at the path '{file_path}'")
         return ''
 
 def extract_excel(file_path: str, file_type: str):
@@ -56,7 +62,18 @@ def extract_pptx(file_path):
         for shape in slide.shapes:
             if hasattr(shape, 'text'):
                 text.append(shape.text)
-    return text
+        text.append('\n')
+    text.append('\n')
+    return '\n'.join(text)
+
+def extract_epub(file_path):
+    text = []
+    book = ebooklib.epub.read_epub(file_path)
+    for item in book.get_items():
+        if item.get_type() == ebooklib.ITEM_DOCUMENT:
+            text.append(item.get_body_content())
+    text.append('\n')
+    return '\n'.join(text)
 
 def load_and_extract_file(id, file_object):
 

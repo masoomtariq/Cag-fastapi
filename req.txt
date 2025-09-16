@@ -9,3 +9,6 @@ pymongo[srv]==3.12
 datetime
 python-docx
 python-pptx
+ebooklib
+pdf2image
+pytesseract
