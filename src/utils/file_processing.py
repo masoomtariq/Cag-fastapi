@@ -2,10 +2,28 @@ from pypdf import PdfReader
 from tempfile import NamedTemporaryFile
 from db import file_exists
 from fastapi import HTTPException
+from docx import Document
 
 files_path = 'tmp/uploads'
 
-def extract_text(file_path):
+def extract_txt(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        text = file.read()
+    return text + '\n\n'
+
+def extract_docx(file_path):
+    try:
+        doc = Document(file_path)
+        full_text = []
+        for para in doc.paragraphs:
+            full_text.append(para.text)
+        text = '\n'.join(full_text)
+        return text + '\n\n'
+    except Exception as e:
+        print(f"An error occurred while processing the DOCX file: {e}")
+        return ''
+
+def extract_pdf(file_path):
  
     full_text = []
     text = ''
@@ -21,7 +39,7 @@ def extract_text(file_path):
         print(f"The file is not found at the path '{file_path}'")
         return ''
     
-def load_and_extract(id, file_object):
+def load_and_extract_file(id, file_object):
 
     file_name, file_type = file_object.filename.split('.')
     if file_exists(file_name):
@@ -31,5 +49,5 @@ def load_and_extract(id, file_object):
                                 suffix=file_type, delete= True) as temp_file:
             temp_file.write(file_object.file.read())
             
-            text = extract_text(temp_file.name)
+            text = extract_pdf(temp_file.name)
             return text
