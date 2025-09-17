@@ -22,11 +22,13 @@ def delete_collection():
         database = client['cag_app']
         database.drop_collection('docs_data')
 
-def file_exists(filename: str):
+def check_file_exists(filename: str):
 
     collection = get_collection()
     titles = collection.distinct('files.file_name')
     extensions = collection.distinct('files.file_type')
     files = [i+'.'+j for i, j in zip(titles, extensions)]
 
-    return filename in files
+    if filename in files:
+        raise HTTPException(status_code=401,
+                                detail=f"The file with name '{filename}' already exists. Please rename the file and try again.")

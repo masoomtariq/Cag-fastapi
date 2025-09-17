@@ -1,6 +1,6 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException
 from file_handler import File_Handler
-from db import get_collection, verify_id
+from db import get_collection, verify_id, check_file_exists
 import os
 
 files_path = 'tmp/uploads'
@@ -14,7 +14,8 @@ def add_file(file: UploadFile = File(...)):
 
     global counter
     current_id = counter + 1
-    
+    check_file_exists(file.filename)
+
     file_instance = File_Handler(user_id= current_id, file_object= file) #id for naming the file
     file_instance.load_and_process()
 
@@ -31,6 +32,7 @@ def add_file(file: UploadFile = File(...)):
 def update_the_existing_file(id: int, file: UploadFile = File(...)):
 
     verify_id(id=id)
+    check_file_exists(file.filename)
     
     try:
         file_instance = File_Handler(user_id= id, file_object=file) #id for naming the fil

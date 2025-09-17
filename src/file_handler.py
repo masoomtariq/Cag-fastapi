@@ -1,6 +1,5 @@
 from fastapi import UploadFile, HTTPException
 from utils.file_processing import EXTRACTORS
-from db import file_exists
 from tempfile import NamedTemporaryFile
 from file_models import FILE_INFO, FILES
 
@@ -8,11 +7,8 @@ files_path = 'tmp/uploads'
 
 class File_Handler:
     def __init__(self, file_object: UploadFile, user_id: int):
-        self.file_object = file_object
 
-        if file_exists(self.file_object.filename):
-            raise HTTPException(status_code=401,
-                                detail=f"The file with name '{self.file_object.filename}' already exists. Please rename the file and try again.")
+        self.file_object = file_object
         self.user_id = user_id
         self.file_name = file_object.filename
         self.file_title, self.file_type = self.file_name.rsplit('.', 1)
