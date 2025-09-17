@@ -9,21 +9,23 @@ import pytesseract
 from PIL import Image
 
 def extract_txt(file_path):
+    """Extract text from a plain text file."""
     with open(file_path, 'r', encoding='utf-8') as file:
         text = file.read()
     return text + '\n\n'
 
 def extract_pdf(file_path):
- 
+    """Extract text from a PDF file, using OCR for image-based pages."""
     full_text = []
     text = ''
     try:
         reader = PdfReader(file_path)
         for index, page in enumerate(reader.pages):
             text = page.extract_text()
-            if text and text.strip():
+            if text and text.strip(): # If text is found, use it
                 full_text.append(text.strip())
-            else:
+            else: # If no text, use OCR
+                # Convert the current page to an image
                 images = convert_from_path(file_path, first_page=index+1, last_page=index+1)
                 if images:
                     ocr_text = pytesseract.image_to_string(images[0]).strip()
@@ -36,7 +38,7 @@ def extract_pdf(file_path):
         return ''
 
 def extract_docx(file_path):
-
+    """Extract text from a DOCX file."""
     try:
         doc = Document(file_path)
         full_text = []
