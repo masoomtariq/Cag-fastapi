@@ -1,8 +1,4 @@
-from fastapi import UploadFile
 from pypdf import PdfReader
-from tempfile import NamedTemporaryFile
-from db import file_exists
-from fastapi import HTTPException
 from docx import Document
 import pandas as pd
 from pptx import Presentation
@@ -12,7 +8,6 @@ from pdf2image import convert_from_path
 import pytesseract
 from PIL import Image
 
-files_path = 'tmp/uploads'
 
 def extract_txt(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
@@ -112,27 +107,3 @@ EXTRACTORS = {
     "gif": extract_image,
     "webp": extract_image
 }
-
-def load_and_extract_file(id: int, file_object: UploadFile):
-
-    file_name, file_type = file_object.filename.rsplit('.', 1)
-    file_type = file_type.lower()
-
-    if file_exists(file_object.filename):
-        raise HTTPException(status_code=401, detail=f"The file with name '{file_name}' already exists. Please rename the file and try again.")
-    
-    with NamedTemporaryFile(dir=files_path,
-                                prefix=f'{id}_{file_name}_',
-                                suffix=f'.{file_type}', delete= True) as temp_file:
-            temp_file.write(file_object.file.read())
-            extractor = EXTRACTORS.get(file_type, None)
-            
-            if extractor is None:
-                raise HTTPException(status_code=400, detail=f"Unsupported file type: {file_type}")
-            try:
-                return extractor(temp_file.name)
-            except Exception as e:
-                raise HTTPException(
-                status_code=500,
-                detail=f"Error extracting text from {file_type.upper()} file: {str(e)}"
-            )
