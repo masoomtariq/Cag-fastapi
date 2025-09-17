@@ -1,4 +1,4 @@
-📘 CAG-FastAPI
+**📘 CAG-FastAPI
 
 A FastAPI-based application for file upload, text extraction, and conversational AI integration.
 It supports multiple file types, extracts their textual content, stores structured data in MongoDB, and allows querying via LLMs (Google GenAI).
