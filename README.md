@@ -41,3 +41,25 @@ Cag-fastapi-main/
             file_processing.py  # Extractors for different file formats
             helpers.py          # Utility functions (datetime, etc.)
             llm_response.py     # Google GenAI integration
+
+📌 Example Workflow:
+
+Upload a file via /upload endpoint.
+
+Extracted content and metadata are stored in MongoDB.
+
+Query the content via /query endpoint (LLM-powered).
+
+Get a structured JSON response.
+
+--> 🛠 Tech Stack
+
+Backend: FastAPI
+
+Database: MongoDB
+
+Parsing: PyPDF, python-docx, pandas, python-pptx, ebooklib, BeautifulSoup, pytesseract
+
+LLM: Google GenAI
+
+Templating: Jinja2
