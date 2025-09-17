@@ -11,7 +11,6 @@ from bs4 import BeautifulSoup
 from pdf2image import convert_from_path
 import pytesseract
 from PIL import Image
-import os
 
 files_path = 'tmp/uploads'
 

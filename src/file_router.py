@@ -1,5 +1,5 @@
 from fastapi import File, UploadFile, APIRouter, HTTPException, Path, Query
-from utils.file_processing import load_and_extract
+from utils.file_processing import load_and_extract_file
 from db import get_collection, verify_id
 from file_models import FILES, create_file_info
 import os
@@ -17,7 +17,7 @@ def add_file(file: UploadFile = File(...)):
     current_id = counter + 1
 
     
-    extracted_text = load_and_extract(id=current_id, file_object=file) #id for naming the file
+    extracted_text = load_and_extract_file(id=current_id, file_object=file) #id for naming the file
     
     if extracted_text is None:
         raise HTTPException(status_code=401, detail="Fail to extract text from the file.")
