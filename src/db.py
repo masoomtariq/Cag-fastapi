@@ -7,17 +7,26 @@ load_dotenv()
 
 connection_url = os.getenv('MONGO_URL')
 def get_collection():
+
+    """Return reference to 'docs_data' collection."""
+
     with MongoClient(connection_url) as client:
         database = client['cag_app']
         collection = database['docs_data']
         return collection
 
-ids = get_collection().distinct('id')
 def verify_id(id: int):
-    if id not in ids:
+
+    """Check if a document with given ID exists."""
+
+    collection = get_collection()
+    if not collection.find_one({"id": id}):
         raise HTTPException(status_code=401, detail=f"The given id '{id}' not exists.")
    
 def delete_collection():
+
+    """Drop entire 'docs_data' collection."""
+    
     with MongoClient(connection_url) as client:
         database = client['cag_app']
         database.drop_collection('docs_data')

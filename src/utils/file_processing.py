@@ -8,14 +8,20 @@ from pdf2image import convert_from_path
 import pytesseract
 from PIL import Image
 
+# ---- Extractors for each file type ---- #
+
 def extract_txt(file_path):
+
     """Extract text from a plain text file."""
+
     with open(file_path, 'r', encoding='utf-8') as file:
         text = file.read()
     return text + '\n\n'
 
 def extract_pdf(file_path):
+
     """Extract text from a PDF file, using OCR for image-based pages."""
+
     full_text = []
     text = ''
     try:
@@ -38,7 +44,9 @@ def extract_pdf(file_path):
         return ''
 
 def extract_docx(file_path):
+
     """Extract text from a DOCX file."""
+
     try:
         doc = Document(file_path)
         full_text = []
@@ -52,6 +60,8 @@ def extract_docx(file_path):
 
 def extract_excel(file_path: str):
 
+    """Extract tabular content from CSV/Excel files."""
+
     file_type = file_path.rsplit('.')[-1].lower()
     if file_type == 'csv':
         df = pd.read_csv(file_path)
@@ -63,6 +73,8 @@ def extract_excel(file_path: str):
         raise ValueError(f"Unsupported file type: {file_type}")
 
 def extract_pptx(file_path):
+
+    """Extract text from PPTX slides."""
 
     text = []
     prs = Presentation(file_path)
@@ -77,6 +89,8 @@ def extract_pptx(file_path):
 
 def extract_epub(file_path):
 
+    """Extract text from EPUB documents."""
+
     text = []
     book = ebooklib.epub.read_epub(file_path)
     
@@ -88,6 +102,9 @@ def extract_epub(file_path):
     return '\n'.join(text)
 
 def extract_image(file_path):
+
+    """Extract text from images via OCR."""
+    
     text = pytesseract.image_to_string(Image.open(file_path))
     return text
 

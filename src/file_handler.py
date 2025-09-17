@@ -1,3 +1,10 @@
+"""
+file_handler.py
+----------------
+Handles incoming UploadFile objects, delegates extraction to extractors,
+and returns structured Pydantic models (FILE_INFO / FILES) ready for DB storage.
+"""
+
 from fastapi import UploadFile, HTTPException
 from utils.file_processing import EXTRACTORS
 from tempfile import NamedTemporaryFile
