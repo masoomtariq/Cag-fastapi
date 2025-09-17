@@ -63,3 +63,23 @@ Parsing: PyPDF, python-docx, pandas, python-pptx, ebooklib, BeautifulSoup, pytes
 LLM: Google GenAI
 
 Templating: Jinja2
+
+Cag-fastapi-main/
+    Cag-fastapi-main/
+        .gitignore
+        README.md
+        req.txt
+        src/
+            __init__.py
+            db.py
+            file_handler.py
+            file_models.py
+            file_router.py
+            main.py
+            templates/
+                home.html
+            utils/
+                __init__.py
+                file_processing.py
+                helpers.py
+                llm_response.py
