@@ -15,7 +15,7 @@ class File_Handler:
                                 detail=f"The file with name '{self.file_object.filename}' already exists. Please rename the file and try again.")
         self.user_id = user_id
         self.file_name = file_object.filename
-        self.file_title, self.file_type = self.file_name.rsplit(',', 1)
+        self.file_title, self.file_type = self.file_name.rsplit('.', 1)
 
         file_object.file.seek(0, 2)   # Move to end of file
         size_in_bytes = file_object.file.tell()  # Position = total size in bytes
@@ -26,7 +26,7 @@ class File_Handler:
     def load_and_process(self):
 
         with NamedTemporaryFile(dir=files_path,
-                                prefix=f'{self.id}_{self.file_name}_',
+                                prefix=f'{self.user_id}_{self.file_name}_',
                                 suffix=f'.{self.file_type}', delete= True) as temp_file:
             temp_file.write(self.file_object.file.read())
             extractor = EXTRACTORS.get(self.file_type, None)
@@ -59,7 +59,7 @@ class File_Handler:
                                    file_content=self.file_content,
                                    size_mb=self.size_mb)
         
-        self.files_data = FILES(id=self.id,
+        self.files_data = FILES(id=self.user_id,
                                 files=[self.file_data],
                                 combined_content=self.file_content)
         
