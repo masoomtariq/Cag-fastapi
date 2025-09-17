@@ -1,4 +1,4 @@
-**📘 CAG-FastAPI
+📘 CAG-FastAPI
 
 A FastAPI-based application for file upload, text extraction, and conversational AI integration.
 It supports multiple file types, extracts their textual content, stores structured data in MongoDB, and allows querying via LLMs (Google GenAI).
@@ -24,6 +24,7 @@ Upload date/time saved in ISO 8601 format with Pakistan Standard Time (PKT).
 Clean FastAPI endpoints and optional Jinja2 template (home.html).
 
 📂 Project Structure
+
 Cag-fastapi-main/
     .gitignore
     README.md
