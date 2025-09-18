@@ -110,7 +110,7 @@ class File_Handler:
         Returns:
             dict: Serialized FILES model.
         """
-        if not self.file_data:
+        if not getattr(self, "file_data", None):
             self.create_file_model()
 
         self.files_data = FILES(
