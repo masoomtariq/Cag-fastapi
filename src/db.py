@@ -5,10 +5,12 @@ import os
 
 load_dotenv()
 connection_url = os.getenv('MONGO_URL')
+db_name = os.getenv('DB_name')
+collection_name = os.getenv('collection_name')
 
 # One global MongoClient instance (thread-safe and reusable)
 client = MongoClient(connection_url)
-database = client["cag_app"]
+database = client[db_name]
 
 def get_collection():
     """
@@ -18,7 +20,7 @@ def get_collection():
         Collection: MongoDB collection object for 'docs_data'.
     """
     # Use context manager to ensure connection closes properly
-    return database['docs_data']
+    return database[collection_name]
 
 
 def verify_id(id: int):
@@ -45,8 +47,8 @@ def delete_collection():
     Use with caution: This will remove all documents permanently.
     """
     with MongoClient(connection_url) as client:
-        database = client['cag_app']
-        database.drop_collection('docs_data')
+        database = client[db_name]
+        database.drop_collection(collection_name)
 
 
 def check_file_exists(filename: str):
