@@ -10,72 +10,70 @@ from PIL import Image
 
 # ---- Extractors for each file type ---- #
 
-def extract_txt(file_path):
-
+def extract_txt(file_path: str) -> str:
     """Extract text from a plain text file."""
-
     with open(file_path, 'r', encoding='utf-8') as file:
         text = file.read()
     return text + '\n\n'
 
-def extract_pdf(file_path):
 
-    """Extract text from a PDF file, using OCR for image-based pages."""
-
+def extract_pdf(file_path: str) -> str:
+    """
+    Extract text from a PDF file.
+    - Uses PdfReader for selectable text.
+    - Falls back to OCR via pytesseract for scanned/image pages.
+    """
     full_text = []
-    text = ''
     try:
         reader = PdfReader(file_path)
         for index, page in enumerate(reader.pages):
             text = page.extract_text()
-            if text and text.strip(): # If text is found, use it
+            if text and text.strip():  
+                # If text is found on the page
                 full_text.append(text.strip())
-            else: # If no text, use OCR
-                # Convert the current page to an image
-                images = convert_from_path(file_path, first_page=index+1, last_page=index+1)
+            else:
+                # If page has no text, fallback to OCR
+                images = convert_from_path(file_path, first_page=index + 1, last_page=index + 1)
                 if images:
                     ocr_text = pytesseract.image_to_string(images[0]).strip()
                     if ocr_text:
                         full_text.append(ocr_text)
-        text = '\n'.join(full_text)
-        return text + '\n\n'
+        return '\n'.join(full_text) + '\n\n'
     except FileNotFoundError:
-        print(f"The file is not found at the path '{file_path}'")
+        print(f"File not found at path '{file_path}'")
         return ''
 
-def extract_docx(file_path):
 
+def extract_docx(file_path: str) -> str:
     """Extract text from a DOCX file."""
-
     try:
         doc = Document(file_path)
-        full_text = []
-        for para in doc.paragraphs:
-            full_text.append(para.text)
-        text = '\n'.join(full_text)
-        return text + '\n\n'
+        full_text = [para.text for para in doc.paragraphs]
+        return '\n'.join(full_text) + '\n\n'
     except Exception as e:
-        print(f"An error occurred while processing the DOCX file: {e}")
+        print(f"Error processing DOCX file: {e}")
         return ''
 
-def extract_excel(file_path: str):
 
-    """Extract tabular content from CSV/Excel files."""
-
+def extract_excel(file_path: str) -> str:
+    """
+    Extract tabular content from CSV/Excel files.
+    
+    Args:
+        file_path (str): Path to the file (.csv, .xls, .xlsx).
+    """
     file_type = file_path.rsplit('.')[-1].lower()
     if file_type == 'csv':
         df = pd.read_csv(file_path)
-        return df.to_string() + '\n\n'
     elif file_type in ['xls', 'xlsx', 'excel']:
         df = pd.read_excel(file_path)
-        return df.to_string() + '\n\n'
     else:
         raise ValueError(f"Unsupported file type: {file_type}")
+    return df.to_string() + '\n\n'
 
-def extract_pptx(file_path):
 
-    """Extract text from PPTX slides."""
-
+def extract_pptx(file_path: str) -> str:
+    """Extract text from all slides in a PPTX presentation."""
     text = []
     prs = Presentation(file_path)
 
@@ -83,31 +81,30 @@ def extract_pptx(file_path):
         for shape in slide.shapes:
             if shape.has_text_frame:
                 text.append(shape.text)
-        text.append('\n')
-    text.append('\n')
-    return '\n'.join(text)
+        text.append('\n')  # Slide separator
 
-def extract_epub(file_path):
+    return '\n'.join(text) + '\n\n'
 
-    """Extract text from EPUB documents."""
 
+def extract_epub(file_path: str) -> str:
+    """Extract text from an EPUB file."""
     text = []
     book = ebooklib.epub.read_epub(file_path)
-    
+
     for item in book.get_items():
         if item.get_type() == ebooklib.ITEM_DOCUMENT:
             soup = BeautifulSoup(item.get_body_content(), "html.parser")
             text.append(soup.get_text())
-    text.append('\n')
-    return '\n'.join(text)
 
-def extract_image(file_path):
+    return '\n'.join(text) + '\n\n'
 
-    """Extract text from images via OCR."""
-    
-    text = pytesseract.image_to_string(Image.open(file_path))
-    return text
 
+def extract_image(file_path: str) -> str:
+    """Extract text from an image file using OCR."""
+    return pytesseract.image_to_string(Image.open(file_path))
+
+
+# Mapping of supported file types to their extractor functions
 EXTRACTORS = {
     "pdf": extract_pdf,
     "txt": extract_txt,
