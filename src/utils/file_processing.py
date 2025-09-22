@@ -6,23 +6,43 @@ import ebooklib
 from bs4 import BeautifulSoup
 from pdf2image import convert_from_path
 import easyocr
-from PIL import Image
+import tempfile
+import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+OCR_reader = easyocr.Reader(['en'], gpu=False)
+
+OCR_space_api = os.getenv("OCR_SPACE_API")
+
+language='eng'
 
 # ---- Extractors for each file type ---- #
 
 # Initialize EasyOCR once (to avoid reloading model each call)
-OCR_reader = easyocr.Reader(['en'], gpu=False)
 
 def extract_image(file_path: str) -> str:
 
     """Extract text from an image file using OCR."""
 
+    payload = {
+        'isOverlayRequired': False,
+        'apikey': OCR_space_api,
+        'language': language,
+    }
+    with open(file_path, 'rb') as f:
+        response = requests.post(
+            'https://api.ocr.space/parse/image',
+            files={file_path: f},
+            data=payload,
+        )
+    result = response.json()
     try:
-        results = OCR_reader.readtext(file_path)
-        text = " ".join([res[1] for res in results])
-        return text + "\n\n"
+        return result['ParsedResults'][0]['ParsedText']
     except Exception as e:
-        print(f"Error while extracting text from image: {e}")
+        print("Error:", e, result)
         return ""
 
 def extract_txt(file_path: str) -> str:
@@ -50,15 +70,15 @@ def extract_pdf(file_path: str) -> str:
                 # If page has no text, fallback to OCR
                 images = convert_from_path(file_path, first_page=index + 1, last_page=index + 1)
                 if images:
-                    # Save image temporarily in memory
-                    pil_image = images[0]
+                    # Save page as a temporary image file
+                    with tempfile.NamedTemporaryFile(suffix=".png", delete=True) as tmp_img:
+                        images[0].save(tmp_img.name, format="PNG")
 
-                    # Run EasyOCR on it
-                    results = OCR_reader.readtext(pil_image)
-                    ocr_text = " ".join([res[1] for res in results]).strip()
+                        # Send to OCR.space API
+                        ocr_text = extract_image(tmp_img.name).strip()
 
-                    if ocr_text:
-                        full_text.append(ocr_text)
+                        if ocr_text:
+                            full_text.append(ocr_text)
         return '\n'.join(full_text) + '\n\n'
     except FileNotFoundError:
         print(f"File not found at path '{file_path}'")
