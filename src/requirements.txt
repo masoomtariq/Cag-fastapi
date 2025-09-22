@@ -15,7 +15,5 @@ xlrd
 openpyxl
 ebooklib
 pdf2image
-tesseract
-pytesseract
 bs4
 pathlib
