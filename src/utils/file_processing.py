@@ -5,10 +5,25 @@ from pptx import Presentation
 import ebooklib
 from bs4 import BeautifulSoup
 from pdf2image import convert_from_path
-import pytesseract
+import easyocr
 from PIL import Image
 
 # ---- Extractors for each file type ---- #
+
+# Initialize EasyOCR once (to avoid reloading model each call)
+OCR_reader = easyocr.Reader(['en'], gpu=False)
+
+def extract_image(file_path: str) -> str:
+
+    """Extract text from an image file using OCR."""
+
+    try:
+        results = OCR_reader.readtext(file_path)
+        text = " ".join([res[1] for res in results])
+        return text + "\n\n"
+    except Exception as e:
+        print(f"Error while extracting text from image: {e}")
+        return ""
 
 def extract_txt(file_path: str) -> str:
     """Extract text from a plain text file."""
@@ -35,7 +50,13 @@ def extract_pdf(file_path: str) -> str:
                 # If page has no text, fallback to OCR
                 images = convert_from_path(file_path, first_page=index + 1, last_page=index + 1)
                 if images:
-                    ocr_text = pytesseract.image_to_string(images[0]).strip()
+                    # Save image temporarily in memory
+                    pil_image = images[0]
+
+                    # Run EasyOCR on it
+                    results = OCR_reader.readtext(pil_image)
+                    ocr_text = " ".join([res[1] for res in results]).strip()
+
                     if ocr_text:
                         full_text.append(ocr_text)
         return '\n'.join(full_text) + '\n\n'
@@ -97,12 +118,6 @@ def extract_epub(file_path: str) -> str:
             text.append(soup.get_text())
 
     return '\n'.join(text) + '\n\n'
-
-
-def extract_image(file_path: str) -> str:
-    """Extract text from an image file using OCR."""
-    return pytesseract.image_to_string(Image.open(file_path))
-
 
 # Mapping of supported file types to their extractor functions
 EXTRACTORS = {

@@ -14,5 +14,5 @@ xlrd
 openpyxl
 ebooklib
 pdf2image
-pytesseract
+easyocr
 bs4
