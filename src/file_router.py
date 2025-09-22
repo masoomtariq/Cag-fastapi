@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.post("/upload", status_code=201)
-def add_file(file: UploadFile = File(...)):
+async def add_file(file: UploadFile = File(...)):
     """
     Upload a new file, extract its content, and save it to MongoDB.
 
@@ -29,16 +29,16 @@ def add_file(file: UploadFile = File(...)):
     current_id = counter + 1
 
     # Prevent duplicate filenames in DB
-    check_file_exists(file.filename)
+    await check_file_exists(file.filename)
 
     # Process file (extract content + metadata)
     file_instance = File_Handler(user_id=current_id, file_object=file)
-    file_instance.load_and_process()
+    await file_instance.load_and_process()
 
     # Build FILES model and save to DB
     files_data = file_instance.create_files_model()
     collection = get_collection()
-    collection.insert_one(files_data)
+    await collection.insert_one(files_data)
 
     counter += 1  # Update global counter
 
@@ -46,7 +46,7 @@ def add_file(file: UploadFile = File(...)):
 
 
 @router.put("/update/{id}")
-def update_the_existing_file(id: int, file: UploadFile = File(...)):
+async def update_the_existing_file(id: int, file: UploadFile = File(...)):
     """
     Upload a new file and append it to an existing user ID.
 
@@ -58,21 +58,23 @@ def update_the_existing_file(id: int, file: UploadFile = File(...)):
         dict: Confirmation message with the updated ID.
     """
     # Ensure the document exists & filename is unique
-    verify_id(id=id)
-    check_file_exists(file.filename)
+    await verify_id(id=id)
+    await check_file_exists(file.filename)
 
     try:
         # Process the new file
         file_instance = File_Handler(user_id=id, file_object=file)
-        file_instance.load_and_process()
+        await file_instance.load_and_process()
         file_data = file_instance.create_file_model()
         extracted_text = file_instance.file_content
 
         collection = get_collection()
 
         # Append new file + update combined content
-        file_content = collection.find_one({"id": id})["combined_content"] + extracted_text
-        collection.update_one(
+        # Fetch existing combined content
+        doc = await collection.find_one({"id": id})
+        file_content = doc["combined_content"] + extracted_text
+        await collection.update_one(
             {"id": id},
             update={
                 "$push": {"files": file_data},
@@ -93,7 +95,7 @@ def update_the_existing_file(id: int, file: UploadFile = File(...)):
 
 
 @router.delete("/delete/{id}")
-def delete_file(id: int):
+async def delete_file(id: int):
     """
     Delete all files associated with a given ID.
 
@@ -103,8 +105,8 @@ def delete_file(id: int):
     Returns:
         dict: Confirmation message with deleted ID.
     """
-    verify_id(id=id)
+    await verify_id(id=id)
     collection = get_collection()
-    collection.delete_one({"id": id})
+    await collection.delete_one({"id": id})
 
     return {"message": "The file/files has been deleted", "ID": id}

@@ -17,3 +17,4 @@ ebooklib
 pdf2image
 bs4
 pathlib
+asyncio

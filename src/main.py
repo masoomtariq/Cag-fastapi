@@ -5,6 +5,7 @@ from file_router import router, counter
 from utils.llm_response import get_llm_response
 from db import verify_id, get_collection, delete_collection
 from pathlib import Path as path
+import asyncio
 
 # Initialize FastAPI app
 app = FastAPI(title="CAG Project - File Upload & Query System")
@@ -18,7 +19,7 @@ templates = Jinja2Templates(TEMPLATES_DIR)
 
 
 @app.get("/", response_class=HTMLResponse, tags=["Root"])
-def home(request: Request):
+async def home(request: Request):
     """
     Render home page (static template).
     """
@@ -26,7 +27,7 @@ def home(request: Request):
 
 
 @app.get("/list_files", tags=["Data Overview"])
-def list_files():
+async def list_files():
     """
     List all unique filenames stored in MongoDB.
 
@@ -34,7 +35,7 @@ def list_files():
         dict: Number of files + list of stored filenames.
     """
     collection = get_collection()
-    files = collection.distinct("files.file_name")
+    files = await collection.distinct("files.file_name")
 
     return {"message": f"There are {len(files)} files stored.", "Files in directory": files}
 
@@ -55,7 +56,7 @@ app.include_router(router=router, prefix="/file", tags=["File Management"])
 
 
 @app.get("/query/{id}", tags=["Chat with Files"])
-def query_file(id: int = Path(...), query: str = Query(default="")):
+async def query_file(id: int = Path(...), query: str = Query(default="")):
     """
     Query uploaded files via Google Gemini.
 
@@ -70,21 +71,21 @@ def query_file(id: int = Path(...), query: str = Query(default="")):
 
     # Fetch combined content for this ID
     collection = get_collection()
-    docs_data = collection.find_one({"id": id})
+    docs_data = await collection.find_one({"id": id})
     file_text = docs_data["combined_content"]
 
     # Get Gemini response
-    response = get_llm_response(context=file_text, query=query)
+    response = await get_llm_response(context=file_text, query=query)
     return {"message": response.text}
 
 
 @app.on_event("shutdown")
-def shutdown_session():
+async def shutdown_session():
     """
     Cleanup task - drop collection on shutdown.
     ⚠️ This deletes all data permanently.
     """
-    delete_collection()
+    await delete_collection()
 
 
 # Run app with Uvicorn (for local development)
