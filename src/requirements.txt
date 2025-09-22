@@ -16,3 +16,4 @@ openpyxl
 ebooklib
 pdf2image
 pytesseract
+bs4
