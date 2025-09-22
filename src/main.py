@@ -4,12 +4,17 @@ from fastapi.templating import Jinja2Templates
 from file_router import router, counter
 from utils.llm_response import get_llm_response
 from db import verify_id, get_collection, delete_collection
+from pathlib import Path as path
 
 # Initialize FastAPI app
 app = FastAPI(title="CAG Project - File Upload & Query System")
 
+# Get the current directory of this file
+BASE_DIR = path(__file__).resolve().parent
+TEMPLATES_DIR = BASE_DIR / "templates"
+
 # Jinja2 template directory (⚠️ Update path if running outside /workspaces)
-templates = Jinja2Templates(directory="/src/templates")
+templates = Jinja2Templates(TEMPLATES_DIR)
 
 
 @app.get("/", response_class=HTMLResponse, tags=["Root"])

@@ -117,8 +117,5 @@ EXTRACTORS = {
     "jpg": extract_image,
     "jpeg": extract_image,
     "png": extract_image,
-    "tif": extract_image,
-    "bmp": extract_image,
-    "gif": extract_image,
-    "webp": extract_image
+    "bmp": extract_image
 }
