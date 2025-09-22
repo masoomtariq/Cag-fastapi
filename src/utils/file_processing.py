@@ -5,15 +5,12 @@ from pptx import Presentation
 import ebooklib
 from bs4 import BeautifulSoup
 from pdf2image import convert_from_path
-import easyocr
 import tempfile
 import requests
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
-OCR_reader = easyocr.Reader(['en'], gpu=False)
 
 OCR_space_api = os.getenv("OCR_SPACE_API")
 
