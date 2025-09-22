@@ -9,7 +9,7 @@ from db import verify_id, get_collection, delete_collection
 app = FastAPI(title="CAG Project - File Upload & Query System")
 
 # Jinja2 template directory (⚠️ Update path if running outside /workspaces)
-templates = Jinja2Templates(directory="/workspaces/Cag/src/templates")
+templates = Jinja2Templates(directory="/src/templates")
 
 
 @app.get("/", response_class=HTMLResponse, tags=["Root"])
