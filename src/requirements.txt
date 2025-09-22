@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+python-multipart
+jinja2
+pypdf
+google-genai
+Python_dotenv
+pymongo[srv]==3.12
+datetime
+python-docx
+python-pptx
+pandas
+xlrd
+openpyxl
+ebooklib
+pdf2image
+pytesseract
