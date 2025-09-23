@@ -5,7 +5,6 @@ from file_router import router, counter
 from utils.llm_response import get_llm_response
 from db import verify_id, get_collection, delete_collection
 from pathlib import Path as path
-import asyncio
 
 # Initialize FastAPI app
 app = FastAPI(title="CAG Project - File Upload & Query System")
