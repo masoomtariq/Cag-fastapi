@@ -1,21 +1,80 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>
-            Cag Project APi
-        </title>
-    </head>
-    <body>
-        <div>
-            <h1>
-                Welcome to cag project api
-            </h1>
-            <p>
-                View automatically the documentation here:
-            </p>
-            <p>
-                <a href="/docs" target="_blank">swager UI (OpenAI docs)</a>
-            </p>
-        </div>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAG Project API</title>
+    <style>
+        /* Reset some defaults */
+        body, h1, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+            color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        a {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background: #ff7e5f;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        a:hover {
+            background: #feb47b;
+            transform: scale(1.05);
+        }
+
+        #datetime {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to CAG Project API</h1>
+        <p>View automatically generated documentation here:</p>
+        <p>
+            <a href="/docs" target="_blank">Interactive API Docs</a>
+        </p>
+        <p>
+            Powered by Swagger UI & OpenAPI
+        </p>
+        <div id="datetime"></div>
+    </div>
+
+</body>
 </html>
