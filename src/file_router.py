@@ -1,7 +1,7 @@
 import os
-from fastapi import File, UploadFile, APIRouter, HTTPException
+from fastapi import File, UploadFile, APIRouter, HTTPException, Request
 from file_handler import File_Handler
-from db import get_collection, verify_id, check_file_exists
+from helpers import verify_id, check_file_exists
 
 # Directory where uploaded files are temporarily stored
 files_path = "tmp/uploads"
@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.post("/upload", status_code=201)
-async def add_file(file: UploadFile = File(...)):
+async def add_file(request: Request, file: UploadFile = File(...)):
     """
     Upload a new file, extract its content, and save it to MongoDB.
 
@@ -28,8 +28,10 @@ async def add_file(file: UploadFile = File(...)):
     global counter
     current_id = counter + 1
 
+    collection = request.app.state.collection
+
     # Prevent duplicate filenames in DB
-    await check_file_exists(file.filename)
+    await check_file_exists(filename=file.filename, collection=collection)
 
     # Process file (extract content + metadata)
     file_instance = File_Handler(user_id=current_id, file_object=file)
@@ -37,7 +39,6 @@ async def add_file(file: UploadFile = File(...)):
 
     # Build FILES model and save to DB
     files_data = file_instance.create_files_model()
-    collection = get_collection()
     await collection.insert_one(files_data)
 
     counter += 1  # Update global counter
@@ -46,7 +47,7 @@ async def add_file(file: UploadFile = File(...)):
 
 
 @router.put("/update/{id}")
-async def update_the_existing_file(id: int, file: UploadFile = File(...)):
+async def update_the_existing_file(request: Request, id: int, file: UploadFile = File(...)):
     """
     Upload a new file and append it to an existing user ID.
 
@@ -57,9 +58,11 @@ async def update_the_existing_file(id: int, file: UploadFile = File(...)):
     Returns:
         dict: Confirmation message with the updated ID.
     """
+    collection = request.app.state.collection
+
     # Ensure the document exists & filename is unique
-    await verify_id(id=id)
-    await check_file_exists(file.filename)
+    await verify_id(id=id, collection=collection)
+    await check_file_exists(file.filename, collection=collection)
 
     try:
         # Process the new file
@@ -67,8 +70,6 @@ async def update_the_existing_file(id: int, file: UploadFile = File(...)):
         await file_instance.load_and_process()
         file_data = file_instance.create_file_model()
         extracted_text = file_instance.file_content
-
-        collection = get_collection()
 
         # Append new file + update combined content
         # Fetch existing combined content
@@ -95,7 +96,7 @@ async def update_the_existing_file(id: int, file: UploadFile = File(...)):
 
 
 @router.delete("/delete/{id}")
-async def delete_file(id: int):
+async def delete_file(request: Request, id: int):
     """
     Delete all files associated with a given ID.
 
@@ -105,8 +106,8 @@ async def delete_file(id: int):
     Returns:
         dict: Confirmation message with deleted ID.
     """
-    await verify_id(id=id)
-    collection = get_collection()
+    collection = request.app.state.collection
+    await verify_id(id=id, collection=collection)
     await collection.delete_one({"id": id})
 
     return {"message": "The file/files has been deleted", "ID": id}

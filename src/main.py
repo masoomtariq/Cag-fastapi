@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from file_router import router, counter
 from utils.llm_response import get_llm_response
-from db import verify_id
+from helpers import verify_id
 from pathlib import Path as path
 from dotenv import load_dotenv
 import os
@@ -76,7 +76,7 @@ async def query_file(id: int = Path(...), query: str = Query(default="")):
     Returns:
         dict: LLM response text.
     """
-    verify_id(id=id)
+    verify_id(id=id, collection=app.state.collection)
 
     # Fetch combined content for this ID
     docs_data = await app.state.collection.find_one({"id": id})

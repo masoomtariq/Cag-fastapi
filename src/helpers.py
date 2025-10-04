@@ -2,7 +2,7 @@ from fastapi import Request, HTTPException
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-def verify_id(id: int):
+async def verify_id(collection, id: int):
     """
     Verify if a document with the given ID exists in the collection.
 
@@ -12,14 +12,14 @@ def verify_id(id: int):
     Raises:
         HTTPException: If no document with the given ID exists.
     """
-    collection = Request.app.state.collection
-    if not collection.find_one({"id": id}):
+
+    if not await collection.find_one({"id": id}):
         raise HTTPException(
             status_code=404,
             detail=f"The given id '{id}' does not exist."
         )
 
-def check_file_exists(filename: str):
+async def check_file_exists(collection, filename: str):
     """
     Check if a file with the given name already exists in the collection.
 
@@ -29,10 +29,9 @@ def check_file_exists(filename: str):
     Raises:
         HTTPException: If file already exists in the database.
     """
-    collection = Request.app.state.collection
     
     # check if the filename is exists in the database.
-    if collection.find_one({'files.file_name': filename}):
+    if await collection.find_one({'files.file_name': filename}):
         raise HTTPException(
             status_code=409,
             detail=(
