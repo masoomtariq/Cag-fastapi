@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Annotated, List
-from utils.helpers import datetime_func
+from helpers import datetime_func
 
 
 class FILE_INFO(BaseModel):
