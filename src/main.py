@@ -1,10 +1,19 @@
 from fastapi import FastAPI, Request, Path, Query
+from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from file_router import router, counter
 from utils.llm_response import get_llm_response
 from db import verify_id, get_collection, delete_collection
 from pathlib import Path as path
+from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+connection_url = os.getenv('MONGO_URL')
+db_name = os.getenv('DB_name')
+collection_name = os.getenv('collection_name')
 
 # Initialize FastAPI app
 app = FastAPI(title="CAG Project - File Upload & Query System")

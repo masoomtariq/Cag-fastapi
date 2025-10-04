@@ -1,4 +1,5 @@
-from pymongo import MongoClient
+from motor.motor_asyncio import AsyncIOMotorClient
+from fastapi import Depends
 from dotenv import load_dotenv
 from fastapi import HTTPException
 import os
@@ -9,10 +10,19 @@ db_name = os.getenv('DB_name')
 collection_name = os.getenv('collection_name')
 
 # One global MongoClient instance (thread-safe and reusable)
-client = MongoClient(connection_url)
-database = client[db_name]
+client: AsyncIOMotorClient = None
 
-def get_collection():
+async def connect_to_mongo():
+    global client
+    client = AsyncIOMotorClient(connection_url)
+
+async def close_mongo_connection():
+    client.close()
+
+async def get_db():
+    return client[connection_url]
+
+def get_collection(db=Depends(get_db)):
     """
     Get a reference to the 'docs_data' collection in 'cag_app' database.
 
@@ -20,7 +30,7 @@ def get_collection():
         Collection: MongoDB collection object for 'docs_data'.
     """
     # Use context manager to ensure connection closes properly
-    return database[collection_name]
+    return db[collection_name]
 
 
 def verify_id(id: int):
@@ -41,14 +51,12 @@ def verify_id(id: int):
         )
 
 
-def delete_collection():
+def delete_collection(db=Depends(get_db)):
     """
     Drop the entire 'docs_data' collection from the database.
     Use with caution: This will remove all documents permanently.
     """
-    with MongoClient(connection_url) as client:
-        database = client[db_name]
-        database.drop_collection(collection_name)
+    db.drop_collection(collection_name)
 
 
 def check_file_exists(filename: str):
