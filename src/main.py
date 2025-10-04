@@ -4,9 +4,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from file_router import router, counter
 from utils.llm_response import get_llm_response
-from db import verify_id, get_collection, delete_collection
+from db import verify_id
 from pathlib import Path as path
-from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 
@@ -18,12 +17,18 @@ collection_name = os.getenv('collection_name')
 # Initialize FastAPI app
 app = FastAPI(title="CAG Project - File Upload & Query System")
 
+@app.on_event("startup")
+async def startup():
+    app.state.mongo_client = AsyncIOMotorClient(connection_url)
+    app.state.db = app.state.mongo_client[db_name]
+    app.state.collection = app.state.db[collection_name]
+
 # Get the current directory of this file
 BASE_DIR = path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 # Jinja2 template directory (⚠️ Update path if running outside /workspaces)
-templates = Jinja2Templates(TEMPLATES_DIR)
+templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 
 @app.get("/", response_class=HTMLResponse, tags=["Root"])
@@ -42,20 +47,16 @@ async def list_files():
     Returns:
         dict: Number of files + list of stored filenames.
     """
-    collection = get_collection()
-    files = await collection.distinct("files.file_name")
+    files = await app.state.collection.distinct("files.file_name")
 
     return {"message": f"There are {len(files)} files stored.", "Files in directory": files}
 
 
 @app.delete("/reset_files", tags=["Admin"])
-def reset_datastore():
-    """
-    Reset datastore by deleting all documents and resetting the counter.
-    """
+async def reset_datastore():
     global counter
-    counter = 0  # ⚠️ Resets only runtime counter, not DB IDs
-    delete_collection()
+    counter = 0
+    await app.state.db.drop_collection(collection_name)
     return {"message": "All the files and their records have been deleted successfully."}
 
 
@@ -78,8 +79,7 @@ async def query_file(id: int = Path(...), query: str = Query(default="")):
     verify_id(id=id)
 
     # Fetch combined content for this ID
-    collection = get_collection()
-    docs_data = await collection.find_one({"id": id})
+    docs_data = await app.state.collection.find_one({"id": id})
     file_text = docs_data["combined_content"]
 
     # Get Gemini response
@@ -93,7 +93,8 @@ async def shutdown_session():
     Cleanup task - drop collection on shutdown.
     ⚠️ This deletes all data permanently.
     """
-    await delete_collection()
+    await app.state.db.drop_collection(collection_name)
+    app.state.mongo_client.close()
 
 
 # Run app with Uvicorn (for local development)

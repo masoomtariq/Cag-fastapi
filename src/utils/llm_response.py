@@ -17,7 +17,7 @@ if not _api_key:
 client = genai.Client(api_key=_api_key)
 
 
-def get_llm_response(context: str, query: str) -> str:
+async def get_llm_response(context: str, query: str) -> str:
     """
     Query the Google Gemini LLM with user input and provided context.
 
