@@ -35,7 +35,7 @@ async def add_file(request: Request, file: UploadFile = File(...)):
 
     # Process file (extract content + metadata)
     file_instance = File_Handler(user_id=current_id, file_object=file)
-    await file_instance.load_and_process()
+    file_instance.load_and_process()
 
     # Build FILES model and save to DB
     files_data = file_instance.create_files_model()
@@ -62,12 +62,12 @@ async def update_the_existing_file(request: Request, id: int, file: UploadFile =
 
     # Ensure the document exists & filename is unique
     await verify_id(id=id, collection=collection)
-    await check_file_exists(file.filename, collection=collection)
+    await check_file_exists(collection, filename=file.filename)
 
     try:
         # Process the new file
         file_instance = File_Handler(user_id=id, file_object=file)
-        await file_instance.load_and_process()
+        file_instance.load_and_process()
         file_data = file_instance.create_file_model()
         extracted_text = file_instance.file_content
 
