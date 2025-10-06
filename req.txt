@@ -6,7 +6,7 @@ jinja2
 pypdf
 google-genai
 Python_dotenv
-pymongo[srv]==3.12
+pymongo[srv]>=4.15.2
 datetime
 python-docx
 python-pptx
@@ -18,4 +18,4 @@ pdf2image
 bs4
 pathlib
 asyncio
-motor
+motor>=4.9
