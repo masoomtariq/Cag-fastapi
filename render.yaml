@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: fastapi-app
+    env: python
+    plan: free
+    region: Singapore
+    buildCommand: "pip install -r req.txt"
+    startCommand: "gunicorn -k uvicorn.workers.UvicornWorker src.main:app"
+    envVars:
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: MONGO_URL
+        sync: false
+      - key: DB_name
+        sync: false
+      - key: collection_name
+        sync: false
+      - key: OCR_SPACE_API
+        sync: false
