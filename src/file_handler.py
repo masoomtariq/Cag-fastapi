@@ -9,6 +9,27 @@ from fastapi import UploadFile, HTTPException
 from tempfile import NamedTemporaryFile
 from file_models import FILE_INFO, FILES
 from utils.file_processing import extract_pdf, extract_txt, extract_docx, extract_excel, extract_image, extract_pptx, extract_epub
+import logging
+import colorlog
+
+# Create a colored handler
+handler = colorlog.StreamHandler()
+
+# Set specific colors for log levels
+handler.setFormatter(colorlog.ColoredFormatter(
+    "%(log_color)s%(asctime)s - %(levelname)s - %(message)s",
+    log_colors={
+        'DEBUG':    'cyan',
+        'INFO':     'green',    # Customizes logger.info to print in green
+        'WARNING':  'yellow',
+        'ERROR':    'red',
+        'CRITICAL': 'red,bg_white',
+    }
+))
+
+logger = colorlog.getLogger("MyLogger")
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 # Temporary directory where files are processed
 files_path = 'tmp/uploads'
@@ -28,7 +49,6 @@ EXTRACTORS = {
     "png": extract_image,
     "bmp": extract_image
 }
-
 
 class File_Handler:
     """
@@ -59,6 +79,8 @@ class File_Handler:
         file_object.file.seek(0)      # Reset pointer back to start
         self.size_mb = round(size_in_bytes / (1024 ** 2), 2)
 
+        logger.info(f"File initialized: {self.file_name} (Size: {self.size_mb} MB)")
+
     def load_and_process(self):
         """
         Save file temporarily, extract text using appropriate extractor,
@@ -72,11 +94,12 @@ class File_Handler:
             dir=files_path,
             prefix=f'{self.user_id}_{self.file_name}_',
             suffix=f'.{self.file_type}',
-            delete=True
+            delete=False
         ) as temp_file:
             # Write uploaded file content into temporary file
             temp_file.write(self.file_object.file.read())
 
+            logger.debug(f"Temporary file created: {temp_file.name} for user ID: {self.user_id}")
             # Select extractor based on file type (extension)
             extractor = EXTRACTORS.get(self.file_type, None)
             if extractor is None:
@@ -86,6 +109,7 @@ class File_Handler:
                 )
 
             try:
+                logger.error(f"Extracting text from {self.file_type.upper()} file: {self.file_name}")
                 extracted_text = extractor(temp_file.name)
             except Exception as e:
                 raise HTTPException(
@@ -93,7 +117,8 @@ class File_Handler:
                     detail=f"Error extracting text from {self.file_type.upper()} file: {str(e)}"
                 )
 
-            if extracted_text is None:
+            logger.critical(f"Extraction completed for file: {self.file_name}. Extracted text length: {len(extracted_text)} characters.")
+            if extracted_text == "" or extracted_text is None:
                 raise HTTPException(
                     status_code=422,
                     detail="Failed to extract text from the file."

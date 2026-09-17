@@ -8,11 +8,20 @@ from helpers import verify_id
 from pathlib import Path as path
 from dotenv import load_dotenv
 import os
+import logging
 
 load_dotenv()
 connection_url = os.getenv('MONGO_URL')
 db_name = os.getenv('DB_NAME')
 collection_name = os.getenv('COLLECTION_NAME')
+
+# Configure basic console output for testing
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+
+logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(title="CAG Project - File Upload & Query System")
