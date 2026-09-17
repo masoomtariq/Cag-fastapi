@@ -6,7 +6,7 @@ jinja2
 pypdf
 google-genai
 Python_dotenv
-pymongo[srv]>=4.15.2
+pymongo[srv]==3.12
 datetime
 python-docx
 python-pptx
