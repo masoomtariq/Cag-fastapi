@@ -135,19 +135,3 @@ def extract_epub(file_path: str) -> str:
             text.append(soup.get_text())
 
     return '\n'.join(text) + '\n\n'
-
-# Mapping of supported file types to their extractor functions
-EXTRACTORS = {
-    "pdf": extract_pdf,
-    "txt": extract_txt,
-    "docx": extract_docx,
-    "pptx": extract_pptx,
-    "epub": extract_epub,
-    "xls": extract_excel,
-    "xlsx": extract_excel,
-    "csv": extract_excel,
-    "jpg": extract_image,
-    "jpeg": extract_image,
-    "png": extract_image,
-    "bmp": extract_image
-}
