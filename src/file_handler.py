@@ -6,12 +6,28 @@ and returns structured Pydantic models (FILE_INFO / FILES) ready for DB storage.
 """
 
 from fastapi import UploadFile, HTTPException
-from utils.file_processing import EXTRACTORS
 from tempfile import NamedTemporaryFile
 from file_models import FILE_INFO, FILES
+from utils.file_processing import extract_pdf, extract_txt, extract_docx, extract_excel, extract_image, extract_pptx, extract_epub
 
 # Temporary directory where files are processed
 files_path = 'tmp/uploads'
+
+# Mapping of supported file types to their extractor functions
+EXTRACTORS = {
+    "pdf": extract_pdf,
+    "txt": extract_txt,
+    "docx": extract_docx,
+    "pptx": extract_pptx,
+    "epub": extract_epub,
+    "xls": extract_excel,
+    "xlsx": extract_excel,
+    "csv": extract_excel,
+    "jpg": extract_image,
+    "jpeg": extract_image,
+    "png": extract_image,
+    "bmp": extract_image
+}
 
 
 class File_Handler:

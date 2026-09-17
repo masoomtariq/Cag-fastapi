@@ -39,6 +39,7 @@ async def get_llm_response(context: str, query: str) -> str:
     If the query is directly addressed in the context, provide an accurate and well-structured response.
     If the query is not covered, politely state that the information is not available in the context.
     Do not invent or assume details beyond what the context provides.
+    If context is insufficient, respond with "The information is not available in the provided document."
     Maintain relevance by always connecting your answer back to the context’s content.
     When explaining, prefer clarity over length, and adapt language to be easy to understand.
     Keep responses respectful, supportive, and focused on solving the user’s need.
