@@ -109,7 +109,7 @@ class File_Handler:
                 )
 
             try:
-                logger.error(f"Extracting text from {self.file_type.upper()} file: {self.file_name}")
+                logger.error(f"Extracting text with {extractor.__name__} from {self.file_type.upper()} file: {self.file_name}")
                 extracted_text = extractor(temp_file.name)
             except Exception as e:
                 raise HTTPException(
