@@ -14,11 +14,16 @@ load_dotenv()
 
 OCR_space_api = os.getenv("OCR_SPACE_API")
 
+POPPLER_BIN_PATH = r"M:\Projects\Cag_fastapi\Cag-fastapi\Release-26.09.0-0\poppler-26.09.0\Library\bin"
+
 language='eng'
 
 # ---- Extractors for each file type ---- #
 
 # Initialize EasyOCR once (to avoid reloading model each call)
+
+
+reader = easyocr.Reader(['en'])  # Initialize the reader for English
 
 def extract_image(file_path: str) -> str:
 
@@ -65,7 +70,7 @@ def extract_pdf(file_path: str) -> str:
                 full_text.append(text.strip())
             else:
                 # If page has no text, fallback to OCR
-                images = convert_from_path(file_path, first_page=index + 1, last_page=index + 1)
+                images = convert_from_path(file_path, first_page=index + 1, last_page=index + 1, poppler_path=POPPLER_BIN_PATH)
                 if images:
                     # Save page as a temporary image file
                     with tempfile.NamedTemporaryFile(suffix=".png", delete=True) as tmp_img:

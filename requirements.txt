@@ -19,3 +19,4 @@ pathlib
 asyncio
 motor>=3.7.1
 colorlog
+poppler

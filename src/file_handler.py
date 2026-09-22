@@ -11,6 +11,7 @@ from file_models import FILE_INFO, FILES
 from utils.file_processing import extract_pdf, extract_txt, extract_docx, extract_excel, extract_image, extract_pptx, extract_epub
 import logging
 import colorlog
+import os
 
 # Create a colored handler
 handler = colorlog.StreamHandler()
@@ -83,25 +84,35 @@ class File_Handler:
 
     def load_and_process(self):
         """
-        Save file temporarily, extract text using appropriate extractor,
-        and store the extracted content in self.file_content.
-
-        Raises:
-            HTTPException: If file type is unsupported,
-                           extraction fails, or no text is returned.
+        Save file temporarily, extract text, then clean up.
         """
-        with NamedTemporaryFile(
-            dir=files_path,
-            prefix=f'{self.user_id}_{self.file_name}_',
-            suffix=f'.{self.file_type}',
-            delete=False
-        ) as temp_file:
-            # Write uploaded file content into temporary file
-            temp_file.write(self.file_object.file.read())
 
-            logger.debug(f"Temporary file created: {temp_file.name} for user ID: {self.user_id}")
-            # Select extractor based on file type (extension)
-            extractor = EXTRACTORS.get(self.file_type, None)
+        temp_path = None
+
+        try:
+            with NamedTemporaryFile(
+                dir=files_path,
+                prefix=f"{self.user_id}_{self.file_name}_",
+                suffix=f".{self.file_type}",
+                delete=False
+            ) as temp_file:
+
+                temp_path = temp_file.name
+
+                file_bytes = self.file_object.file.read()
+                temp_file.write(file_bytes)
+                temp_file.flush()
+
+            # IMPORTANT:
+            # temp_file is now closed before the extractor opens it.
+
+            logger.debug(
+                f"Temporary file created: {temp_path} "
+                f"for user ID: {self.user_id}"
+            )
+
+            extractor = EXTRACTORS.get(self.file_type.lower())
+
             if extractor is None:
                 raise HTTPException(
                     status_code=400,
@@ -109,26 +120,43 @@ class File_Handler:
                 )
 
             try:
-                logger.error(f"Extracting text with {extractor.__name__} from {self.file_type.upper()} file: {self.file_name}")
-                extracted_text = extractor(temp_file.name).strip()  # Remove leading/trailing whitespace
+                logger.info(
+                    f"Extracting text with {extractor.__name__} "
+                    f"from {self.file_type.upper()} file: {self.file_name}"
+                )
+
+                extracted_text = extractor(temp_path).strip()
+
             except Exception as e:
                 logger.exception(
-                    f"Error extracting text from {self.file_name}: {e}"
+                    f"PDF/text extraction failed for "
+                    f"{self.file_name}: {e}"
                 )
+
                 raise HTTPException(
                     status_code=500,
-                    detail=f"Error extracting text from {self.file_type.upper()} file: {str(e)}"
+                    detail=(
+                        f"Error extracting text from "
+                        f"{self.file_type.upper()} file: {str(e)}"
+                    )
                 )
 
-            logger.critical(f"Extraction completed for file: {self.file_name}. Extracted text length: {len(extracted_text)} characters.")
-            if extracted_text == "" or extracted_text is None:
+            if not extracted_text:
                 raise HTTPException(
                     status_code=422,
-                    detail="No content found or Failed to extract text in the file."
+                    detail="No content found or failed to extract text."
                 )
 
-            # Store extracted content
             self.file_content = extracted_text
+
+        finally:
+            if temp_path and os.path.exists(temp_path):
+                try:
+                    os.remove(temp_path)
+                except OSError:
+                    logger.warning(
+                        f"Could not remove temporary file: {temp_path}"
+                    )
 
     def create_file_model(self):
         """
