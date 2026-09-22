@@ -110,7 +110,7 @@ class File_Handler:
 
             try:
                 logger.error(f"Extracting text with {extractor.__name__} from {self.file_type.upper()} file: {self.file_name}")
-                extracted_text = extractor(temp_file.name)
+                extracted_text = extractor(temp_file.name).strip()  # Remove leading/trailing whitespace
             except Exception as e:
                 raise HTTPException(
                     status_code=500,
@@ -121,7 +121,7 @@ class File_Handler:
             if extracted_text == "" or extracted_text is None:
                 raise HTTPException(
                     status_code=422,
-                    detail="Failed to extract text from the file."
+                    detail="No content found or Failed to extract text in the file."
                 )
 
             # Store extracted content
