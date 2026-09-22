@@ -23,8 +23,6 @@ language='eng'
 # Initialize EasyOCR once (to avoid reloading model each call)
 
 
-reader = easyocr.Reader(['en'])  # Initialize the reader for English
-
 def extract_image(file_path: str) -> str:
 
     """Extract text from an image file using OCR."""
