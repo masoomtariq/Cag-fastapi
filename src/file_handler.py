@@ -112,6 +112,9 @@ class File_Handler:
                 logger.error(f"Extracting text with {extractor.__name__} from {self.file_type.upper()} file: {self.file_name}")
                 extracted_text = extractor(temp_file.name).strip()  # Remove leading/trailing whitespace
             except Exception as e:
+                logger.exception(
+                    f"Error extracting text from {self.file_name}: {e}"
+                )
                 raise HTTPException(
                     status_code=500,
                     detail=f"Error extracting text from {self.file_type.upper()} file: {str(e)}"
